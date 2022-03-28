@@ -1,0 +1,4 @@
+# Dotnet files
+.vs
+bin
+obj
