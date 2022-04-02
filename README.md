@@ -16,26 +16,26 @@
 class SampleHandler : BaseHandler
 {
     [MessageReaction(ChatAction.Typing)]
-    [MessagePattern("/start")]
+    [MessageHandler("/start")]
     public async Task Start()
     {
         string messageText = $"Hi! your id is {User.TelegramId}, chatId is {ChatId}.";
-        await Bot.SendTextMessageAsync(ChatId, messageText);
+        await BotClient.SendTextMessageAsync(ChatId, messageText);
     }
 
     [MessageReaction(ChatAction.Typing)]
-    [MessagePattern("/test")]
+    [MessageHandler("/start")]
     public async Task TestMethod()
     {
         string messageText = $"Test passed successfully!";
-        await Bot.SendTextMessageAsync(ChatId, messageText);
+        await BotClient.SendTextMessageAsync(ChatId, messageText);
     }
 
     [MessageTypeFilter(MessageType.Voice)]
     public async Task VoiceMethod()
     {
         string messageText = $"Voice message!";
-        await Bot.SendTextMessageAsync(ChatId, messageText);
+        await BotClient.SendTextMessageAsync(ChatId, messageText);
     }
 }
 ```
