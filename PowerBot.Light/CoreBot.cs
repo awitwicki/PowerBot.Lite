@@ -41,8 +41,8 @@ namespace PowerBot.Lite
         {
             try
             {
-                // Handle message
-                await MessageInvoker.InvokeUpdate(botClient, update);
+                // Handle message, do not wait until Invoke will be finished
+                MessageInvoker.InvokeUpdate(botClient, update);
             }
             catch (Exception exception)
             {
