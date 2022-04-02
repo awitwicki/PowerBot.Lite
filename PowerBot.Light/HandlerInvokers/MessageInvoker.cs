@@ -88,7 +88,6 @@ namespace PowerBot.Lite.HandlerInvokers
             // Get all handlers
             var handlers = ReflectiveEnumerator.GetEnumerableOfType<BaseHandler>();
 
-
             foreach (var handlerType in handlers)
             {
                 // Find method in handler
@@ -96,8 +95,10 @@ namespace PowerBot.Lite.HandlerInvokers
 
                 List<MethodInfo> filteredMethods = FilterHandlerMethods(handlerMethods, update);
 
-                // Invoke methods
-                foreach (var method in filteredMethods)
+                // Invoke first matched method
+                MethodInfo method = filteredMethods.FirstOrDefault();
+
+                if (method != null)
                 {
                     try
                     {

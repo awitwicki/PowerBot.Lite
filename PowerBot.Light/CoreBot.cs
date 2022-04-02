@@ -41,6 +41,9 @@ namespace PowerBot.Lite
         {
             try
             {
+                // Invoke middleware
+                await MiddlewareInvoker.InvokeUpdate(botClient, update);
+
                 // Handle message, do not wait until Invoke will be finished
                 MessageInvoker.InvokeUpdate(botClient, update);
             }
