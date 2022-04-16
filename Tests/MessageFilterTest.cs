@@ -29,18 +29,18 @@ namespace Tests
         public async Task updateChatMemberLeft() { }
 
         [CallbackQueryHandler("bbb")]
-        public async Task updateCallbackQuery() { }
+        public async Task updateCallbackQueryFirst() { }
 
         [UpdateTypeFilter(UpdateType.CallbackQuery)]
-        public async Task updateTypeCallbackQuery() { }
+        public async Task updateCallbackQuerySecond() { }
     }
     internal class TestHandler2 : BaseHandler
     {
         [CallbackQueryHandler("bbb")]
-        public async Task updateCallbackQuery() { }
+        public async Task updateCallbackQueryFirst() { }
 
         [UpdateTypeFilter(UpdateType.CallbackQuery)]
-        public async Task updateTypeCallbackQuery() { }
+        public async Task updateCallbackQuerySecond() { }
     }
 
     public static class UpdateBuilder
@@ -80,8 +80,76 @@ namespace Tests
                 Data = "bbb"
             }
         };
+        public static Update updateRandomCallbackQuery => new Update
+        {
+            CallbackQuery = new CallbackQuery
+            {
+                Data = "dsfsdf"
+            }
+        };
     }
-    
+
+    public class CallbackQueryFilterTest
+    {
+        [Fact]
+        public void TestCallbackQueryWithSpecifiedData()
+        {
+            // Create mock update type
+            Type commandHandlerType = typeof(TestHandler2);
+            List<MethodInfo> methodInfos = commandHandlerType
+                .GetMethods()
+                .ToList();
+
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateCallbackQuery);
+
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler2.updateCallbackQueryFirst));
+        }
+
+        [Fact]
+        public void TestCallbackQueryType()
+        {
+            // Create mock update type
+            Type commandHandlerType = typeof(TestHandler2);
+            List<MethodInfo> methodInfos = commandHandlerType
+                .GetMethods()
+                .ToList();
+
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateRandomCallbackQuery);
+            
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler2.updateCallbackQuerySecond));
+        }
+
+        [Fact]
+        public void TestCallbackQueryWithSpecifiedDataAll()
+        {
+            // Create mock update type
+            Type commandHandlerType = typeof(TestHandler);
+            List<MethodInfo> methodInfos = commandHandlerType
+                .GetMethods()
+                .ToList();
+
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateCallbackQuery);
+
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateCallbackQueryFirst));
+        }
+
+        [Fact]
+        public void TestCallbackQueryTypeAll()
+        {
+            //ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
+            // create mock update type
+
+            Type commandHandlerType = typeof(TestHandler);
+            List<MethodInfo> methodInfos = commandHandlerType
+                .GetMethods()
+                .ToList();
+
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateRandomCallbackQuery);
+
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateCallbackQuerySecond));
+        }
+    }
+
     public class MessageFilterTest
     {
         [Fact]
@@ -92,70 +160,59 @@ namespace Tests
             Type commandHandlerType = typeof(TestHandler);
             List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
 
-            var filteredHandlerMethods = MessageInvoker.FilterHandlerMethods(methodInfos, UpdateBuilder.updateStart);
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateStart);
 
-            Assert.True(filteredHandlerMethods.Count() == 1);
-            Assert.True(filteredHandlerMethods.First().Name == methodInfos.First(x => x.Name == "Start").Name);
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.Start));
         }
 
         [Fact]
         public void TestTestMessagefilter()
         {
-            ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
-            // create mock update type
-
+            // Create mock update type
             Type commandHandlerType = typeof(TestHandler);
             List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
 
-            var filteredHandlerMethods = MessageInvoker.FilterHandlerMethods(methodInfos, UpdateBuilder.updateTest);
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateTest);
 
-            Assert.True(filteredHandlerMethods.Count() == 1);
-            Assert.True(filteredHandlerMethods.First().Name == methodInfos.First(x => x.Name == "test").Name);
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.test));
         }
 
         [Fact]
         public void TestChatMembersAddedMessagefilter()
         {
-            ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
-            // create mock update type
-
+            // Create mock update type
             Type commandHandlerType = typeof(TestHandler);
             List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
 
-            var filteredHandlerMethods = MessageInvoker.FilterHandlerMethods(methodInfos, UpdateBuilder.updateChatMembersAdded);
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateChatMembersAdded);
 
-            Assert.True(filteredHandlerMethods.Count() == 1);
-            Assert.True(filteredHandlerMethods.First().Name == methodInfos.First(x => x.Name == "updateChatMembersAdded").Name);
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateChatMembersAdded));
         }
 
         [Fact]
         public void TestChatMemberLeftMessagefilter()
         {
-            ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
-            // create mock update type
-
+            // Create mock update type
             Type commandHandlerType = typeof(TestHandler);
             List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
 
-            var filteredHandlerMethods = MessageInvoker.FilterHandlerMethods(methodInfos, UpdateBuilder.updateChatMembersLeft);
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateChatMembersLeft);
 
-            Assert.True(filteredHandlerMethods.Count() == 1);
-            Assert.True(filteredHandlerMethods.First().Name == methodInfos.First(x => x.Name == "updateChatMemberLeft").Name);
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateChatMemberLeft));
         }
 
         [Fact]
         public void TestAllUpdateCallbackQueryMessagefilter()
         {
-            ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
-            // create mock update type
-
+            // Create mock update type
             Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
+            List<MethodInfo> methodInfos = commandHandlerType
+                .GetMethods()
+                .ToList();
 
-            var filteredHandlerMethods = MessageInvoker.FilterHandlerMethods(methodInfos, UpdateBuilder.updateCallbackQuery);
+            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateCallbackQuery);
 
-            Assert.True(filteredHandlerMethods.Count() == 2);
-            Assert.True(filteredHandlerMethods.All(x => x.Name.Contains("CallbackQuery")));            
+            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateCallbackQueryFirst));
         }
     }
 }

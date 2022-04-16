@@ -15,73 +15,95 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public class MessageInvoker
     {
-        public static List<MethodInfo> FilterHandlerMethods(IEnumerable<MethodInfo> methodsCollection, Update update)
+        private static MethodInfo _matchHandlerMethodWithCallbackQueries(MethodInfo method, Update update)
         {
-            List<MethodInfo> filteredMethods = new List<MethodInfo>();
+            // TODO move this matching to other class
+            // Matching for message text regex have the most priority than the others
+            if (method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(CallbackQueryHandler)))
+            {
+                // Pattern matching for CallbackQuery data
+                if (AttributeValidators.MatchCallbackQueryHandlerMethod(method, update.CallbackQuery.Data))
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        private static MethodInfo _matchHandlerMethodWithMessages(MethodInfo method, Update update)
+        {
+            // TODO move this matching to other class
+            // Matching for message text regex have the most priority than the others
+            if (update.Message.Text != null && method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageHandler)))
+            {
+                // Pattern matching for message text
+                if (AttributeValidators.MatchMessageHandlerMethod(method, update.Message.Text))
+                {
+                    return method;
+                }
+            }
+
+            // Message type
+            // If method have universal update type attribute filter then check it
+            if (update.Type == UpdateType.Message && method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageTypeFilter)))
+            {
+                // Pattern matching for message text
+                if (AttributeValidators.MatchMessageType(method, update))
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        public static MethodInfo MatchHandlerMethod(IEnumerable<MethodInfo> methodsCollection, Update update)
+        {
+            MethodInfo matchedMethod = null;
 
             // Filter methods attributes
             foreach (var method in methodsCollection)
             {
-                // TODO move this matching to other class
-
-                // Update type have the most priority than the others
-                if (method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(UpdateTypeFilter)))
+                switch (update.Type)
                 {
-                    // Pattern matching for message text
-                    if (!AttributeValidators.MatchUpdateType(method, update))
+                    case UpdateType.CallbackQuery:
+                        matchedMethod = _matchHandlerMethodWithCallbackQueries(method, update);
+                        break;
+
+                    case UpdateType.Message:
+                        matchedMethod = _matchHandlerMethodWithMessages(method, update);
+                        break;
+
+                    // TODO: other event types
+                    // ...
+                }
+
+                // Last check for update type
+                if (matchedMethod == null)
+                {
+                    // Update type 
+                    if (method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(UpdateTypeFilter)))
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        filteredMethods.Add(method);
-                        continue;
+                        // Pattern matching for message text
+                        if (!AttributeValidators.MatchUpdateType(method, update))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            return method;
+                        }
                     }
                 }
 
-                // Message type have bigger priority
-                // If method have universal update type attribute filter then check it
-                if (update.Type == UpdateType.Message && method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageTypeFilter)))
+                if (matchedMethod != null)
                 {
-                    // Pattern matching for message text
-                    if (!AttributeValidators.MatchMessageType(method, update))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        filteredMethods.Add(method);
-                        continue;
-                    }
+                    return matchedMethod;
                 }
-
-                // Matching for update type
-                if (update.Type == UpdateType.Message && update.Message.Text != null && method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageHandler)))
-                {
-                    // Pattern matching for message text
-                    if (!AttributeValidators.MatchMessageHandlerMethod(method, update.Message.Text))
-                    {
-                        continue;
-                    }
-
-                }
-                else if (update.Type == UpdateType.CallbackQuery && method.GetCustomAttributes(true).Any(y => y.GetType() == typeof(CallbackQueryHandler)))
-                {
-                    // Pattern matching for message text
-                    if (!AttributeValidators.MatchCallbackQueryHandlerMethod(method, update.CallbackQuery.Data))
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    continue;
-                }
-
-                filteredMethods.Add(method);
             }
 
-            return filteredMethods;
+            return matchedMethod;
         }
         public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update)
         {
@@ -93,11 +115,9 @@ namespace PowerBot.Lite.HandlerInvokers
                 // Find method in handler
                 MethodInfo[] handlerMethods = handlerType.GetMethods();
 
-                List<MethodInfo> filteredMethods = FilterHandlerMethods(handlerMethods, update);
+                MethodInfo method = MatchHandlerMethod(handlerMethods, update);
 
                 // Invoke first matched method
-                MethodInfo method = filteredMethods.FirstOrDefault();
-
                 if (method != null)
                 {
                     try

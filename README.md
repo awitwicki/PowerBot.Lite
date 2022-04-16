@@ -2,6 +2,10 @@
 
 [Telegram bot](https://github.com/TelegramBots/Telegram.Bot) wrapper.
 
+## Tests
+
+![Tests](https://github.com/awitwicki/PowerBot.Lite/actions/workflows/dotnet.yml/badge.svg)
+
 ```diff
 - This project is in early stage!
 ```
