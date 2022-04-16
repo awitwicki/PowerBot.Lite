@@ -7,7 +7,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace PowerBot.Lite.Attributes
 {
-    public class UpdateTypeFilter: Attribute
+    public class UpdateTypeFilter : Attribute
     {
         public UpdateType UpdateType { get; set; }
         public UpdateTypeFilter(UpdateType updateType)

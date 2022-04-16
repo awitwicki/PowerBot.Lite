@@ -79,7 +79,7 @@ namespace PowerBot.Lite.HandlerInvokers
                     // ...
                 }
 
-                // Last check for update type
+                // Check for update type
                 if (matchedMethod == null)
                 {
                     // Update type 
