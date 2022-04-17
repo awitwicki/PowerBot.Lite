@@ -2,9 +2,15 @@
 
 [Telegram bot](https://github.com/TelegramBots/Telegram.Bot) wrapper.
 
-## Tests
+![Tests](https://img.shields.io/github/workflow/status/awitwicki/PowerBot.Lite/Build%20and%20test)
+![Tests](https://img.shields.io/github/issues/awitwicki/PowerBot.Lite)
+![Tests](https://img.shields.io/github/issues-pr/awitwicki/PowerBot.Lite)
+![Tests](https://img.shields.io/github/last-commit/awitwicki/PowerBot.Lite)
 
-![Tests](https://github.com/awitwicki/PowerBot.Lite/actions/workflows/dotnet.yml/badge.svg)
+![Tests](https://img.shields.io/github/languages/top/awitwicki/PowerBot.Lite)
+![Tests](https://img.shields.io/badge/dotnet-6.0-blue)
+![Tests](https://img.shields.io/github/stars/awitwicki/PowerBot.Lite)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 ```diff
 - This project is in early stage!
