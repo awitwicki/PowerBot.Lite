@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PowerBot.Light\PowerBot.Lite.csproj" />
+    <ProjectReference Include="..\PowerBot.Lite\PowerBot.Lite.csproj" />
   </ItemGroup>
 
 </Project>
