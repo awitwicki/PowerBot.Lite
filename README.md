@@ -16,6 +16,7 @@
 
 2. Create class that inherits `BaseHandler` class and define bot methods:
 
+
 ```csharp
 class SampleHandler : BaseHandler
 {
