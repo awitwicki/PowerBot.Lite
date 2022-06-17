@@ -20,19 +20,17 @@ namespace PowerBot.Lite.HandlerInvokers
             {
                 var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>();
 
-                foreach (var middleware in middlewares)
+                foreach (IBaseMiddleware middleware in middlewares)
                 {
-                    var _middleware = (BaseMiddleware)scope.Resolve<BaseMiddleware>();
-
-                    if (_middleware != null)
+                    if (middleware != null)
                     {
                         try
                         {
                             // Set params
-                            _middleware.Init(botClient, update);
+                            middleware.Init(botClient, update);
 
                             // Invoke method
-                            await _middleware.Invoke();
+                            await middleware.Invoke();
                         }
                         catch (Exception ex)
                         {

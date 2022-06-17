@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Builder;
+using Autofac.Features.AttributeFilters;
 using PowerBot.Lite.HandlerInvokers;
 using PowerBot.Lite.Handlers;
 using PowerBot.Lite.Middlewares;
@@ -30,9 +31,9 @@ namespace PowerBot.Lite
 
             botClient = new TelegramBotClient(botToken);
         }
-       
+
         public ContainerBuilder ContainerBuilder => _containerBuilder;
-        
+
         public void RegisterContainers(Action<ContainerBuilder> action)
         {
             // Register containers from client app
@@ -47,20 +48,22 @@ namespace PowerBot.Lite
             // Register middlewares
             foreach (var middleware in middlewares)
             {
-                _containerBuilder.RegisterType(middleware.GetType())
+                _containerBuilder.RegisterType(middleware)
                     .As<IBaseMiddleware>()
-                    .InstancePerLifetimeScope();
+                    .InstancePerLifetimeScope()
+                    .WithAttributeFiltering();
             }
 
             // Get all handler descriptors
             _handlerDescriptors = MessageInvoker.CollectHandlers();
-          
+
             // Register handlers
             foreach (var handlerMethodType in _handlerDescriptors)
             {
                 _containerBuilder.RegisterType(handlerMethodType.GetHandlerType())
                     .Named(handlerMethodType.GetHandlerType().Name, handlerMethodType.GetHandlerType())
-                    .InstancePerLifetimeScope();
+                    .InstancePerLifetimeScope()
+                    .WithAttributeFiltering();
             }
 
             // Build container
