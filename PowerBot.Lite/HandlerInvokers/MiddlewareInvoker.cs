@@ -1,4 +1,6 @@
-﻿using PowerBot.Lite.Middlewares;
+﻿using Autofac;
+using PowerBot.Lite.Middlewares;
+using PowerBot.Lite.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,31 +12,33 @@ using Telegram.Bot.Types;
 
 namespace PowerBot.Lite.HandlerInvokers
 {
-    public class MiddlewareInvoker
+    public static class MiddlewareInvoker
     {
         public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update)
         {
-            // Get all handlers
-            var handlers = ReflectiveEnumerator.GetEnumerableOfType<BaseMiddleware>();
-
-            Type handlerType = handlers.FirstOrDefault();
-
-            if (handlerType != null)
+            using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
             {
-                try
-                {
-                    // Cast handler object
-                    BaseMiddleware handler = (BaseMiddleware)Activator.CreateInstance(handlerType);
+                var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>();
 
-                    // Set params
-                    handler.Init(botClient, update);
-
-                    // Invoke method
-                    await handler.Invoke();
-                }
-                catch (Exception ex)
+                foreach (var middleware in middlewares)
                 {
-                    Console.WriteLine($"Middleware invoker error: {ex}");
+                    var _middleware = (BaseMiddleware)scope.Resolve<BaseMiddleware>();
+
+                    if (_middleware != null)
+                    {
+                        try
+                        {
+                            // Set params
+                            _middleware.Init(botClient, update);
+
+                            // Invoke method
+                            await _middleware.Invoke();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Middleware invoker error: {ex}");
+                        }
+                    }
                 }
             }
         }

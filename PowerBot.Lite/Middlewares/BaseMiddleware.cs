@@ -9,7 +9,8 @@ using Telegram.Bot.Types;
 namespace PowerBot.Lite.Middlewares
 {
     // TODO: This is a PREMiddleware, need to rework to normal middleware conception
-    public abstract class BaseMiddleware
+    public interface IBaseMiddleware { }
+    public abstract class BaseMiddleware : IBaseMiddleware
     {
         public ITelegramBotClient BotClient { get; set; }
         public Update Update { get; set; }

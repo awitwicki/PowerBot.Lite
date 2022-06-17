@@ -95,58 +95,46 @@ namespace Tests
         public void TestCallbackQueryWithSpecifiedData()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler2);
-            List<MethodInfo> methodInfos = commandHandlerType
-                .GetMethods()
-                .ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateCallbackQuery);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateCallbackQuery);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler2.updateCallbackQueryFirst));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler2.updateCallbackQueryFirst));
         }
 
         [Fact]
         public void TestCallbackQueryType()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler2);
-            List<MethodInfo> methodInfos = commandHandlerType
-                .GetMethods()
-                .ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateRandomCallbackQuery);
-            
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler2.updateCallbackQuerySecond));
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateRandomCallbackQuery);
+
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler2.updateCallbackQuerySecond));
         }
 
         [Fact]
         public void TestCallbackQueryWithSpecifiedDataAll()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType
-                .GetMethods()
-                .ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateCallbackQuery);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateCallbackQuery);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateCallbackQueryFirst));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.updateCallbackQueryFirst));
         }
 
         [Fact]
         public void TestCallbackQueryTypeAll()
         {
             //ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
-            // create mock update type
+            // Create mock update type
 
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType
-                .GetMethods()
-                .ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateRandomCallbackQuery);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateRandomCallbackQuery);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateCallbackQuerySecond));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.updateCallbackQuerySecond));
         }
     }
 
@@ -156,63 +144,55 @@ namespace Tests
         public void TestStartMessagefilter()
         {
             //ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
+            
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateStart);
 
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
-
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateStart);
-
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.Start));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.Start));
         }
 
         [Fact]
         public void TestTestMessagefilter()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateTest);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateTest);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.test));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.test));
         }
 
         [Fact]
         public void TestChatMembersAddedMessagefilter()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateChatMembersAdded);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateChatMembersAdded);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateChatMembersAdded));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.updateChatMembersAdded));
         }
 
         [Fact]
         public void TestChatMemberLeftMessagefilter()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType.GetMethods().ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateChatMembersLeft);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateChatMembersLeft);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateChatMemberLeft));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.updateChatMemberLeft));
         }
 
         [Fact]
         public void TestAllUpdateCallbackQueryMessagefilter()
         {
             // Create mock update type
-            Type commandHandlerType = typeof(TestHandler);
-            List<MethodInfo> methodInfos = commandHandlerType
-                .GetMethods()
-                .ToList();
+            var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-            MethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(methodInfos, UpdateBuilder.updateCallbackQuery);
+            FastMethodInfo matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.updateCallbackQuery);
 
-            Assert.True(matchedHandlerMethod.Name == nameof(TestHandler.updateCallbackQueryFirst));
+            Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.updateCallbackQueryFirst));
         }
     }
 }
