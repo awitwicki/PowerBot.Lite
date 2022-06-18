@@ -14,31 +14,42 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public static class MiddlewareInvoker
     {
-        public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update)
+        public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods)
         {
-            using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+            try
             {
-                var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>();
-
-                foreach (IBaseMiddleware middleware in middlewares)
+                using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
                 {
-                    if (middleware != null)
-                    {
-                        try
-                        {
-                            // Set params
-                            middleware.Init(botClient, update);
+                    var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>();
 
-                            // Invoke method
-                            await middleware.Invoke();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Middleware invoker error: {ex}");
-                        }
+                    // Without middlewares
+                    if (!middlewares.Any())
+                    {
+                        await processMethods();
+                        return;
                     }
+
+                    // Recursively create middlewares action execute tree
+                    IBaseMiddleware firstMiddleware = middlewares.First();
+
+                    // Push middlewares to tree
+                    foreach (IBaseMiddleware middleware in middlewares.Skip(1))
+                    {
+                        firstMiddleware.PushNextMiddleware(middleware);
+                    }
+
+                    // Push final middleware to properly process processMethods delegate
+                    firstMiddleware.PushNextMiddleware(new FinalBaseMiddleware());
+
+                    // Run first middleware
+                    await firstMiddleware.Invoke(botClient, update, processMethods);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Middleware invoker error: {ex}");
             }
         }
     }
+
 }

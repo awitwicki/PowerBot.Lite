@@ -35,7 +35,7 @@ namespace PowerBot.Lite.HandlerInvokers
                     .Where(x => x.DeclaringType != typeof(Object))
                     .ToArray();
 
-                IEnumerable<FastMethodInfo> fastMethodInfos = handlerMethods.Select(x => new FastMethodInfo(x));
+                IEnumerable<FastMethodInfo> fastMethodInfos = handlerMethods.Select(x => new FastMethodInfo(x, handlerType));
 
                 handlerDescriptors.Add(new HandlerDescriptor(handlerType, fastMethodInfos));
             }
@@ -134,43 +134,42 @@ namespace PowerBot.Lite.HandlerInvokers
             return matchedMethod;
         }
 
-        public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update, IEnumerable<HandlerDescriptor> handlerDescriptors)
+        public static IEnumerable<FastMethodInfo> FilterFastMethods(Update update, IEnumerable<HandlerDescriptor> handlerDescriptors)
         {
-            foreach (var handlerDescriptor in handlerDescriptors)
+            return handlerDescriptors
+                .Select(x => MatchHandlerMethod(x.GetMethodInfos(), update))
+                .ToList();
+        }
+
+        public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update, IEnumerable<FastMethodInfo> handlerMethods)
+        {
+            foreach (FastMethodInfo fastMethodInfo in handlerMethods)
             {
-                // Find method in handler
-                IEnumerable<FastMethodInfo> handlerMethodInfos = handlerDescriptor.GetMethodInfos();
-                FastMethodInfo fastMethodInfo = MatchHandlerMethod(handlerMethodInfos, update);
-
-                // Invoke first matched method
-                if (fastMethodInfo != null)
+                try
                 {
-                    try
+                    // Get and send chatAction from attributes
+                    var chatAction = AttributeValidators.GetChatActionAttributes(fastMethodInfo.GetMethodInfo());
+                    if (chatAction.HasValue)
                     {
-                        // Get and send chatAction from attributes
-                        var chatAction = AttributeValidators.GetChatActionAttributes(fastMethodInfo.GetMethodInfo());
-                        if (chatAction.HasValue)
-                        {
-                            long chatId = update.Message?.Chat.Id! ?? update.CallbackQuery?.Message?.Chat.Id! ?? -1;
-                            await botClient.SendChatActionAsync(chatId, chatAction.Value);
-                        }
-
-                        using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
-                        {
-                            // Cast handler object
-                            var handler = scope.ResolveNamed(serviceName: handlerDescriptor.GetHandlerType().Name, handlerDescriptor.GetHandlerType());
-
-                            // Set params
-                            ((BaseHandler)handler).Init(botClient, update);
-
-                            // Invoke method
-                            fastMethodInfo.Invoke(handler);
-                        }
+                        long chatId = update.Message?.Chat.Id! ?? update.CallbackQuery?.Message?.Chat.Id! ?? -1;
+                        await botClient.SendChatActionAsync(chatId, chatAction.Value);
                     }
-                    catch (Exception ex)
+
+                    using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
                     {
-                        Console.WriteLine($"Invoker error: {ex}");
+                        // Cast handler object
+                        var handler = scope.ResolveNamed(serviceName: fastMethodInfo.GetHandlerType().Name, fastMethodInfo.GetHandlerType());
+
+                        // Set params
+                        ((BaseHandler)handler).Init(botClient, update);
+
+                        // Invoke method
+                        fastMethodInfo.Invoke(handler);
                     }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Invoker error: {ex}");
                 }
             }
         }

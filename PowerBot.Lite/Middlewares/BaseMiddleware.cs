@@ -8,32 +8,28 @@ using Telegram.Bot.Types;
 
 namespace PowerBot.Lite.Middlewares
 {
-    // TODO: This is a PREMiddleware, need to rework to normal middleware conception
     public interface IBaseMiddleware
     {
-        void Init(ITelegramBotClient bot, Update update);
-        abstract Task Invoke();
+        void PushNextMiddleware(IBaseMiddleware nextMiddleware);
+        abstract Task Invoke(ITelegramBotClient bot, Update update, Func<Task> func);
     }
 
     public abstract class BaseMiddleware : IBaseMiddleware
     {
-        public ITelegramBotClient BotClient { get; set; }
-        public Update Update { get; set; }
+        public IBaseMiddleware _nextMiddleware { get; set; }
 
-        // User thad has sended message, or user that has clicked message
-        public User User => CallbackQuery == null ? Message.From : CallbackQuery.From;
-        public CallbackQuery CallbackQuery => Update.CallbackQuery;
-        public Message Message => Update.Message ?? Update.CallbackQuery.Message;
-        public int MessageId => Message.MessageId;
-        public Chat Chat => Message.Chat;
-        public long ChatId => Message.Chat.Id;
+        public abstract Task Invoke(ITelegramBotClient bot, Update update, Func<Task> func);
 
-        public void Init(ITelegramBotClient bot, Update update)
+        public void PushNextMiddleware(IBaseMiddleware nextMiddleware)
         {
-            BotClient = bot;
-            Update = update;
+            if (_nextMiddleware == null)
+            {
+                _nextMiddleware = nextMiddleware;
+            }
+            else
+            {
+                _nextMiddleware.PushNextMiddleware(nextMiddleware);
+            }
         }
-
-        public abstract Task Invoke();
     }
 }

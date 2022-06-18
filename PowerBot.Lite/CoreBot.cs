@@ -93,11 +93,15 @@ namespace PowerBot.Lite
         {
             try
             {
-                // Invoke middleware
-                await MiddlewareInvoker.InvokeUpdate(botClient, update);
+                // Get all methods to run to list
+                IEnumerable<FastMethodInfo> filteredFastMethods = MessageInvoker.FilterFastMethods(update, _handlerDescriptors);
 
-                // Handle message, do not wait until Invoke will be finished
-                MessageInvoker.InvokeUpdate(botClient, update, _handlerDescriptors);
+                // Handle message delegate
+                var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods);
+
+                // Invoke middleware with message processing delegate
+                // Not await. Do not wait until Invoke will be finished
+                MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc);
             }
             catch (Exception exception)
             {
