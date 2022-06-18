@@ -86,7 +86,7 @@ namespace PowerBot.Lite
 
             var me = botClient.GetMeAsync().GetAwaiter().GetResult();
 
-            Console.WriteLine($"Start listening druzhokbot for @{me.Username}");
+            Console.WriteLine($"Start listening for @{me.Username}");
         }
 
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
