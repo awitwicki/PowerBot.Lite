@@ -67,7 +67,8 @@ namespace PowerBot.Lite.HandlerInvokers
                 // Find method in handler
                 MethodInfo[] handlerMethods = handlerType
                     .GetMethods()
-                    .Where(m => !m.IsSpecialName)
+                    .Where(x => x.DeclaringType != typeof(BaseHandler))
+                    .Where(x => x.DeclaringType != typeof(Object))
                     .ToArray();
 
                 IEnumerable<FastMethodInfo> fastMethodInfos = handlerMethods.Select(x => new FastMethodInfo(x));
