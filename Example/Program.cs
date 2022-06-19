@@ -12,17 +12,15 @@ if (botToken == null)
     throw new Exception("ENV PowerBot.Lite_TELEGRAM_TOKEN is not defined");
 }
 
-CoreBot botClient = new CoreBot(botToken);
+CoreBot botClient = new CoreBot(botToken)
+    .RegisterContainers(x => {
+        x.RegisterType<RandomService>()
+            .As<IRandomService>()
+            .SingleInstance();
+    })
+    .Build();
 
-botClient.RegisterContainers(x => {
-    x.RegisterType<RandomService>()
-        .As<IRandomService>()
-        .SingleInstance();
-});
-
-botClient.Build();
-
-botClient.StartReveiving();
+    botClient.StartReveiving();
 
 // Wait for eternity
 await Task.Delay(Int32.MaxValue);

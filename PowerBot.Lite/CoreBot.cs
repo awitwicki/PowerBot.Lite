@@ -34,13 +34,15 @@ namespace PowerBot.Lite
 
         public ContainerBuilder ContainerBuilder => _containerBuilder;
 
-        public void RegisterContainers(Action<ContainerBuilder> action)
+        public CoreBot RegisterContainers(Action<ContainerBuilder> action)
         {
             // Register containers from client app
             action.Invoke(_containerBuilder);
+
+            return this;
         }
 
-        public void Build()
+        public CoreBot Build()
         {
             // Get all middlewares
             var middlewares = ReflectiveEnumerator.GetEnumerableOfType<BaseMiddleware>();
@@ -68,6 +70,8 @@ namespace PowerBot.Lite
 
             // Build container
             DIContainerInstance.Container = _containerBuilder.Build();
+
+            return this;
         }
 
         public void StartReveiving()
