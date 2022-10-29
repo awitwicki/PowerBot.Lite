@@ -138,6 +138,7 @@ namespace PowerBot.Lite.HandlerInvokers
         {
             return handlerDescriptors
                 .Select(x => MatchHandlerMethod(x.GetMethodInfos(), update))
+                .Where(x => x is not null)
                 .ToList();
         }
 

@@ -51,5 +51,4 @@ namespace PowerBot.Lite.HandlerInvokers
             }
         }
     }
-
 }
