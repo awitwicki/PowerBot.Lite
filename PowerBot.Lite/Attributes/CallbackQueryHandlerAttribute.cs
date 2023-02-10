@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PowerBot.Lite.Attributes
 {
-    public class CallbackQueryHandler : Attribute
+    public class CallbackQueryHandlerAttribute : Attribute
     {
         public string DataPattern { get; set; }
 
-        public CallbackQueryHandler(string dataPattern = null)
+        public CallbackQueryHandlerAttribute(string dataPattern = null)
         {
             if (dataPattern != null)
             {

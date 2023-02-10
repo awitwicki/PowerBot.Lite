@@ -20,7 +20,7 @@ CoreBot botClient = new CoreBot(botToken)
     })
     .Build();
 
-    botClient.StartReveiving();
+    await botClient.StartReveiving();
 
 // Wait for eternity
 await Task.Delay(Int32.MaxValue);

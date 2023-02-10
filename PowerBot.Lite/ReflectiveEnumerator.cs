@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace PowerBot.Lite
 {
-    internal class ReflectiveEnumerator
+    internal static class ReflectiveEnumerator
     {
         public static IEnumerable<Type> GetEnumerableOfType<T>() where T : class
         {
             List<Type> classes = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .ToList()
                 .SelectMany(x =>
                     x.GetTypes()
                         .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T)))

@@ -8,7 +8,7 @@ namespace Example.Services
 {
     public class RandomService : IRandomService
     {
-        private Random _random;
+        private readonly Random _random;
 
         public RandomService()
         {

@@ -12,6 +12,8 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
 {
     internal class AttributeValidators
     {
+        protected AttributeValidators() { }
+
         // Send chat action
         public static Nullable<ChatAction> GetChatActionAttributes(MethodInfo methodInfo)
         {
@@ -60,9 +62,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
             //find and return chatAction
             foreach (var attribute in attributes)
             {
-                if (attribute.GetType() == typeof(CallbackQueryHandler))
+                if (attribute.GetType() == typeof(CallbackQueryHandlerAttribute))
                 {
-                    var pattern = ((CallbackQueryHandler)attribute).DataPattern;
+                    var pattern = ((CallbackQueryHandlerAttribute)attribute).DataPattern;
 
                     //regex match
                     Match m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
@@ -78,9 +80,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         {
             Object[] attributes = methodInfo.GetCustomAttributes(true);
 
-            UpdateTypeFilter updateTypeFilter = attributes
-                .Where(attribute => attribute.GetType() == typeof(UpdateTypeFilter))
-                .Cast<UpdateTypeFilter>()
+            UpdateTypeFilterAttribute updateTypeFilter = attributes
+                .Where(attribute => attribute.GetType() == typeof(UpdateTypeFilterAttribute))
+                .Cast<UpdateTypeFilterAttribute>()
                 .FirstOrDefault();
 
             if (updateTypeFilter != null)

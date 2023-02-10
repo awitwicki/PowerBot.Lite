@@ -17,30 +17,54 @@ namespace Tests
     internal class TestHandler : BaseHandler
     {
         [MessageHandler("/start")]
-        public async Task Start() { }
+        public Task Start() 
+        {
+            return Task.CompletedTask;
+        }
 
         [MessageHandler("/test")]
-        public async Task test() { }
+        public Task test()
+        {
+            return Task.CompletedTask;
+        }
 
         [MessageTypeFilter(MessageType.ChatMembersAdded)]
-        public async Task updateChatMembersAdded() { }
+        public Task updateChatMembersAdded()
+        {
+            return Task.CompletedTask;
+        }
 
         [MessageTypeFilter(MessageType.ChatMemberLeft)]
-        public async Task updateChatMemberLeft() { }
+        public Task updateChatMemberLeft()
+        {
+            return Task.CompletedTask;
+        }
 
-        [CallbackQueryHandler("bbb")]
-        public async Task updateCallbackQueryFirst() { }
+        [CallbackQueryHandlerAttribute("bbb")]
+        public Task updateCallbackQueryFirst()
+        {
+            return Task.CompletedTask;
+        }
 
-        [UpdateTypeFilter(UpdateType.CallbackQuery)]
-        public async Task updateCallbackQuerySecond() { }
+        [UpdateTypeFilterAttribute(UpdateType.CallbackQuery)]
+        public Task updateCallbackQuerySecond()
+        {
+            return Task.CompletedTask;
+        }
     }
     internal class TestHandler2 : BaseHandler
     {
-        [CallbackQueryHandler("bbb")]
-        public async Task updateCallbackQueryFirst() { }
+        [CallbackQueryHandlerAttribute("bbb")]
+        public Task updateCallbackQueryFirst()
+        {
+            return Task.CompletedTask;
+        }
 
-        [UpdateTypeFilter(UpdateType.CallbackQuery)]
-        public async Task updateCallbackQuerySecond() { }
+        [UpdateTypeFilterAttribute(UpdateType.CallbackQuery)]
+        public Task updateCallbackQuerySecond()
+        {
+            return Task.CompletedTask;
+        }
     }
 
     public static class UpdateBuilder

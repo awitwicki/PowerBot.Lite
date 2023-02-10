@@ -74,7 +74,7 @@ namespace PowerBot.Lite
             return this;
         }
 
-        public void StartReveiving()
+        public async Task StartReveiving()
         {
             // StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
             var receiverOptions = new ReceiverOptions
@@ -88,7 +88,7 @@ namespace PowerBot.Lite
               HandleErrorAsync,
               receiverOptions);
 
-            var me = botClient.GetMeAsync().GetAwaiter().GetResult();
+            var me = await botClient.GetMeAsync();
 
             Console.WriteLine($"Start listening for @{me.Username}");
         }
@@ -105,7 +105,7 @@ namespace PowerBot.Lite
 
                 // Invoke middleware with message processing delegate
                 // Not await. Do not wait until Invoke will be finished
-                MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc);
+                _ = MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc);
             }
             catch (Exception exception)
             {

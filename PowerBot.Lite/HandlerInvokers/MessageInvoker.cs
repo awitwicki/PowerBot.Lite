@@ -21,7 +21,7 @@ namespace PowerBot.Lite.HandlerInvokers
     {
         public static List<HandlerDescriptor> CollectHandlers()
         {
-            List<HandlerDescriptor> handlerDescriptors = new List<HandlerDescriptor>();
+            List<HandlerDescriptor> handlerDescriptors = new();
 
             // Get all handlers
             IEnumerable<Type> handlers = ReflectiveEnumerator.GetEnumerableOfType<BaseHandler>();
@@ -47,7 +47,7 @@ namespace PowerBot.Lite.HandlerInvokers
         {
             // TODO move this matching to other class
             // Matching for message text regex have the most priority than the others
-            if (fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(CallbackQueryHandler)))
+            if (fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(CallbackQueryHandlerAttribute)))
             {
                 // Pattern matching for CallbackQuery data
                 if (AttributeValidators.MatchCallbackQueryHandlerMethod(fastMethodInfo.GetMethodInfo(), update.CallbackQuery.Data))
@@ -111,7 +111,7 @@ namespace PowerBot.Lite.HandlerInvokers
                 if (matchedMethod == null)
                 {
                     // Update type 
-                    if (fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(UpdateTypeFilter)))
+                    if (fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(UpdateTypeFilterAttribute)))
                     {
                         // Pattern matching for message text
                         if (!AttributeValidators.MatchUpdateType(fastMethodInfo.GetMethodInfo(), update))
