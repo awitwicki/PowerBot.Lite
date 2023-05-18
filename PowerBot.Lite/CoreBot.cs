@@ -19,7 +19,7 @@ namespace PowerBot.Lite
     {
         public ITelegramBotClient botClient { get; set; }
         private ContainerBuilder _containerBuilder { get; set; }
-        private HashSet<Type> DefinedMiddlewares { get; set; } = new HashSet<Type>();
+        private List<Type> DefinedMiddlewares { get; set; } = new List<Type>();
         private HashSet<Type> DefinedHandlers { get; set; } = new HashSet<Type>();
         private IEnumerable<HandlerDescriptor> _handlerDescriptors { get; set; }
         public CoreBot(string botToken)
