@@ -8,7 +8,7 @@ namespace PowerBot.Lite.Attributes
         public ChatAction ChatAction { get; set; }
         public MessageReactionAttribute(ChatAction chatAction)
         {
-            this.ChatAction = chatAction;
+            ChatAction = chatAction;
         }
     }
 }

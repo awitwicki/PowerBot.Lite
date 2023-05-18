@@ -8,7 +8,7 @@ namespace PowerBot.Lite.Attributes
 
         public MessageHandlerAttribute(string pattern)
         {
-            this.Pattern = pattern;
+            Pattern = pattern;
         }
     }
 }

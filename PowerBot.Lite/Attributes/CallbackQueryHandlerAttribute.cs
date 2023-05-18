@@ -10,7 +10,7 @@ namespace PowerBot.Lite.Attributes
         {
             if (dataPattern != null)
             {
-                this.DataPattern = dataPattern;
+                DataPattern = dataPattern;
             }
         }
     }

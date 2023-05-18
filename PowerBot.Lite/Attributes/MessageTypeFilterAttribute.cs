@@ -8,7 +8,7 @@ namespace PowerBot.Lite.Attributes
         public MessageType MessageType { get; set; }
         public MessageTypeFilterAttribute(MessageType messageType)
         {
-            this.MessageType = messageType;
+            MessageType = messageType;
         }
     }
 }
