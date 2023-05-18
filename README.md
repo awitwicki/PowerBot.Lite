@@ -1,6 +1,8 @@
-# PowerBot.Lite
+# PowerBot.Lite 
 
 [Telegram bot](https://github.com/TelegramBots/Telegram.Bot) wrapper.
+
+![Tests](https://img.shields.io/badge/PowerBot.Lite-V2.0-blue)
 
 ![Tests](https://img.shields.io/github/workflow/status/awitwicki/PowerBot.Lite/Build%20and%20test)
 ![Tests](https://img.shields.io/github/issues/awitwicki/PowerBot.Lite)
@@ -8,7 +10,7 @@
 ![Tests](https://img.shields.io/github/last-commit/awitwicki/PowerBot.Lite)
 
 ![Tests](https://img.shields.io/github/languages/top/awitwicki/PowerBot.Lite)
-![Tests](https://img.shields.io/badge/dotnet-6.0-blue)
+![Tests](https://img.shields.io/badge/dotnet-7.0-blue)
 ![Tests](https://img.shields.io/github/stars/awitwicki/PowerBot.Lite)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
@@ -32,11 +34,9 @@ botClient.StartReveiving();
 
 // Wait for eternity
 await Task.Delay(Int32.MaxValue);
-
 ```
 
 3. Create class that inherits `BaseHandler` class and define bot methods:
-
 
 ```csharp
 class SampleHandler : BaseHandler
@@ -78,7 +78,7 @@ For method matching `PowerBot.Lite` uses next attributes:
 ### `[MessageReaction(ChatAction.Typing)]`
 Makes bot, send defined `ChatAction` before runs matched method.
 
-### Message atribute filters:
+### Message attribute filters:
 
 ### `[MessageHandler(string pattern)]`
 Filter for text messages, `string pattern` - is regex matching pattern.
@@ -111,9 +111,9 @@ public class FirstMiddleware : BaseMiddleware
 }
 ```
 
-## Depedency Injection
+## Dependency Injection
 
-`PowerBot.Lite` supports depedency injection, based on Autofac container provider.
+`PowerBot.Lite` supports dependency injection, based on Autofac container provider.
 
 To use it, firstly you need to define your DI services as class with interface:
 
