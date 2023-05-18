@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using PowerBot.Lite.HandlerInvokers;
 using System.Linq;
 using Tests.InitialData;
@@ -5,13 +7,16 @@ using Xunit;
 
 namespace Tests
 {
+    // TODO fix naming
     public class MessageFilterTests
     {
         [Fact]
         public void TestStartMessageFilter()
         {
-            var handlerDescriptors = MessageInvoker.CollectHandlers();
-            
+            var handlerTypes = new List<Type> { typeof(TestHandler) };
+            var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+                .ToArray();
+
             var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateStart);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.Start));
@@ -20,9 +25,10 @@ namespace Tests
         [Fact]
         public void TestTestMessageFilter()
         {
-            // Create mock update type
-            var handlerDescriptors = MessageInvoker.CollectHandlers();
-
+            var handlerTypes = new List<Type> { typeof(TestHandler) };
+            var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+                .ToArray();
+            
             var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateTest);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.Test));
@@ -31,8 +37,9 @@ namespace Tests
         [Fact]
         public void TestChatMembersAddedMessageFilter()
         {
-            // Create mock update type
-            var handlerDescriptors = MessageInvoker.CollectHandlers();
+            var handlerTypes = new List<Type> { typeof(TestHandler) };
+            var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+                .ToArray();
 
             var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateChatMembersAdded);
 
@@ -42,9 +49,10 @@ namespace Tests
         [Fact]
         public void TestChatMemberLeftMessageFilter()
         {
-            // Create mock update type
-            var handlerDescriptors = MessageInvoker.CollectHandlers();
-
+            var handlerTypes = new List<Type> { typeof(TestHandler) };
+            var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+                .ToArray();
+            
             var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateChatMembersLeft);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateChatMemberLeft));
@@ -53,8 +61,9 @@ namespace Tests
         [Fact]
         public void TestAllUpdateCallbackQueryMessageFilter()
         {
-            // Create mock update type
-            var handlerDescriptors = MessageInvoker.CollectHandlers();
+            var handlerTypes = new List<Type> { typeof(TestHandler) };
+            var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+                .ToArray();
 
             var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
 

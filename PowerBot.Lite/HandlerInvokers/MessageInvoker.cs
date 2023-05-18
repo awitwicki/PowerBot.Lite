@@ -16,30 +16,6 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public static class MessageInvoker
     {
-        public static List<HandlerDescriptor> CollectHandlers()
-        {
-            List<HandlerDescriptor> handlerDescriptors = new();
-
-            // Get all handlers
-            var handlers = ReflectiveEnumerator.GetEnumerableOfType<BaseHandler>();
-
-            foreach (var handlerType in handlers)
-            {
-                // Find method in handler
-                var handlerMethods = handlerType
-                    .GetMethods()
-                    .Where(x => x.DeclaringType != typeof(BaseHandler))
-                    .Where(x => x.DeclaringType != typeof(Object))
-                    .ToArray();
-
-                var fastMethodInfos = handlerMethods.Select(x => new FastMethodInfo(x, handlerType));
-
-                handlerDescriptors.Add(new HandlerDescriptor(handlerType, fastMethodInfos));
-            }
-
-            return handlerDescriptors;
-        }
-
         private static FastMethodInfo _matchHandlerMethodWithCallbackQueries(FastMethodInfo fastMethodInfo, Update update)
         {
             // TODO move this matching to other class

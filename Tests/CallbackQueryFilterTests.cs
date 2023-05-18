@@ -1,17 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using PowerBot.Lite.HandlerInvokers;
 using Tests.InitialData;
 using Xunit;
 
 namespace Tests;
 
+// TODO fix naming
 public class CallbackQueryFilterTest
 {
     [Fact]
     public void TestCallbackQueryWithSpecifiedData()
     {
-        // Create mock update type
-        var handlerDescriptors = MessageInvoker.CollectHandlers();
+        var handlerTypes = new List<Type> { typeof(TestHandler) };
+        var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+            .ToArray();
 
         var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
@@ -22,8 +26,9 @@ public class CallbackQueryFilterTest
     [Fact]
     public void TestCallbackQueryType()
     {
-        // Create mock update type
-        var handlerDescriptors = MessageInvoker.CollectHandlers();
+        var handlerTypes = new List<Type> { typeof(TestHandler) };
+        var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+            .ToArray();
 
         var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateRandomCallbackQuery);
@@ -34,8 +39,9 @@ public class CallbackQueryFilterTest
     [Fact]
     public void TestCallbackQueryWithSpecifiedDataAll()
     {
-        // Create mock update type
-        var handlerDescriptors = MessageInvoker.CollectHandlers();
+        var handlerTypes = new List<Type> { typeof(TestHandler) };
+        var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+            .ToArray();
 
         var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
@@ -46,10 +52,9 @@ public class CallbackQueryFilterTest
     [Fact]
     public void TestCallbackQueryTypeAll()
     {
-        //ITelegramBotClient telegramBotClient;// = new TelegramBotClient();
-        // Create mock update type
-
-        var handlerDescriptors = MessageInvoker.CollectHandlers();
+        var handlerTypes = new List<Type> { typeof(TestHandler) };
+        var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
+            .ToArray();
 
         var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateRandomCallbackQuery);

@@ -1,23 +1,25 @@
 ﻿using Autofac;
+using Example;
 using Example.Services;
 using PowerBot.Lite;
 
 Console.WriteLine("Hello, World!");
 Console.WriteLine("Starting PowerBot.Lite");
 
-string botToken = "";
+var botToken = "";
 
 if (botToken == null)
 {
     throw new Exception("ENV PowerBot.Lite_TELEGRAM_TOKEN is not defined");
 }
 
-CoreBot botClient = new CoreBot(botToken)
+var botClient = new CoreBot(botToken)
     .RegisterContainers(x => {
         x.RegisterType<RandomService>()
             .As<IRandomService>()
             .SingleInstance();
     })
+    .RegisterHandler<BotHandler>()
     .Build();
 
     await botClient.StartReveiving();

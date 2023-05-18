@@ -19,7 +19,8 @@ namespace PowerBot.Lite
     {
         public ITelegramBotClient botClient { get; set; }
         private ContainerBuilder _containerBuilder { get; set; }
-        private List<HandlerDescriptor> _handlerDescriptors { get; set; }
+        private HashSet<Type> DefinedHandlers { get; set; } = new HashSet<Type>();
+        private IEnumerable<HandlerDescriptor> _handlerDescriptors { get; set; }
         public CoreBot(string botToken)
         {
             // Create DI container
@@ -34,6 +35,13 @@ namespace PowerBot.Lite
         {
             // Register containers from client app
             action.Invoke(_containerBuilder);
+
+            return this;
+        }
+        
+        public CoreBot RegisterHandler<T>() where T : BaseHandler
+        {
+            DefinedHandlers.Add(typeof(T));
 
             return this;
         }
@@ -53,7 +61,7 @@ namespace PowerBot.Lite
             }
 
             // Get all handler descriptors
-            _handlerDescriptors = MessageInvoker.CollectHandlers();
+            _handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
 
             // Register handlers
             foreach (var handlerMethodType in _handlerDescriptors)
