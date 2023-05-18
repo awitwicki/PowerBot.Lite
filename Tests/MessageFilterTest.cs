@@ -17,7 +17,7 @@ namespace Tests
             var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
                 .ToArray();
 
-            var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateStart);
+            var matchedHandlerMethod = FastMethodInfoUpdateMatcher.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateStart);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.Start));
         }
@@ -29,7 +29,7 @@ namespace Tests
             var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
                 .ToArray();
             
-            var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateTest);
+            var matchedHandlerMethod = FastMethodInfoUpdateMatcher.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateTest);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.Test));
         }
@@ -41,7 +41,7 @@ namespace Tests
             var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
                 .ToArray();
 
-            var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateChatMembersAdded);
+            var matchedHandlerMethod = FastMethodInfoUpdateMatcher.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateChatMembersAdded);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateChatMembersAdded));
         }
@@ -53,7 +53,7 @@ namespace Tests
             var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
                 .ToArray();
             
-            var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateChatMembersLeft);
+            var matchedHandlerMethod = FastMethodInfoUpdateMatcher.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateChatMembersLeft);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateChatMemberLeft));
         }
@@ -65,7 +65,7 @@ namespace Tests
             var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
                 .ToArray();
 
-            var matchedHandlerMethod = MessageInvoker.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
+            var matchedHandlerMethod = FastMethodInfoUpdateMatcher.MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
 
             Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateCallbackQueryFirst));
         }

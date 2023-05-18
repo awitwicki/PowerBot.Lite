@@ -25,7 +25,7 @@ var botClient = new CoreBot(botToken)
     .RegisterHandler<BotHandler>()
     .Build();
 
-    await botClient.StartReveiving();
+await botClient.StartReceiving();
 
 // Wait for eternity
 await Task.Delay(Int32.MaxValue);

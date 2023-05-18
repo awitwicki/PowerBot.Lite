@@ -17,7 +17,7 @@ public class CallbackQueryFilterTest
         var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
             .ToArray();
 
-        var matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = FastMethodInfoUpdateMatcher
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler2.UpdateCallbackQueryFirst));
@@ -30,7 +30,7 @@ public class CallbackQueryFilterTest
         var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
             .ToArray();
 
-        var matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = FastMethodInfoUpdateMatcher
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateRandomCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler2.UpdateCallbackQuerySecond));
@@ -43,7 +43,7 @@ public class CallbackQueryFilterTest
         var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
             .ToArray();
 
-        var matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = FastMethodInfoUpdateMatcher
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateCallbackQueryFirst));
@@ -56,7 +56,7 @@ public class CallbackQueryFilterTest
         var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
             .ToArray();
 
-        var matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = FastMethodInfoUpdateMatcher
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateRandomCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateCallbackQuerySecond));

@@ -10,6 +10,7 @@ using PowerBot.Lite.Handlers;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using Example.Services;
+using PowerBot.Lite.Utils;
 
 namespace Example
 {
@@ -27,8 +28,9 @@ namespace Example
         public Task Start()
         {
             var randomValue = _randomService.Random(0, 100);
+            var userMention = User.GetUserMention();
 
-            var messageText = $"Hi! Random integer is: {randomValue}";
+            var messageText = $"Hi {userMention}! Random integer is: {randomValue}";
 
             return BotClient.SendTextMessageAsync(ChatId, messageText);
         }

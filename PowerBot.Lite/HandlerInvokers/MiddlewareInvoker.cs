@@ -12,13 +12,14 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public static class MiddlewareInvoker
     {
-        public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods)
+        public static async Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods)
         {
             try
             {
-                using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+                await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
                 {
-                    var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>();
+                    var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>()
+                        .ToArray();
 
                     // Without middlewares
                     if (!middlewares.Any())

@@ -6,17 +6,16 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public class FastMethodInfo
     {
-
         private delegate void TaskDelegate(object instance);
         private TaskDelegate Delegate { get; }
-        private MethodInfo _methodInfo { get; set; }
-        public MethodInfo GetMethodInfo() => _methodInfo;
-        private Type _handlerType { get; set; }
-        public Type GetHandlerType() => _handlerType;
+        private MethodInfo MethodInfo { get; set; }
+        public MethodInfo GetMethodInfo() => MethodInfo;
+        private Type HandlerType { get; set; }
+        public Type GetHandlerType() => HandlerType;
         public FastMethodInfo(MethodInfo methodInfo, Type handlerType)
         {
-            _handlerType = handlerType;
-            _methodInfo = methodInfo;
+            HandlerType = handlerType;
+            MethodInfo = methodInfo;
             var instanceExpression = Expression.Parameter(typeof(object), "instance");
 
             var callExpression = Expression.Call(
