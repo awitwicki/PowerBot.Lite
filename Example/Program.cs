@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Example;
+using Example.Middlewares;
 using Example.Services;
 using PowerBot.Lite;
 
@@ -19,6 +20,8 @@ var botClient = new CoreBot(botToken)
             .As<IRandomService>()
             .SingleInstance();
     })
+    .RegisterMiddleware<BotMiddleware>()
+    .RegisterMiddleware<BotSecondMiddleware>()
     .RegisterHandler<BotHandler>()
     .Build();
 

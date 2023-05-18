@@ -19,6 +19,7 @@ namespace PowerBot.Lite
     {
         public ITelegramBotClient botClient { get; set; }
         private ContainerBuilder _containerBuilder { get; set; }
+        private HashSet<Type> DefinedMiddlewares { get; set; } = new HashSet<Type>();
         private HashSet<Type> DefinedHandlers { get; set; } = new HashSet<Type>();
         private IEnumerable<HandlerDescriptor> _handlerDescriptors { get; set; }
         public CoreBot(string botToken)
@@ -39,6 +40,13 @@ namespace PowerBot.Lite
             return this;
         }
         
+        public CoreBot RegisterMiddleware<T>() where T : BaseMiddleware
+        {
+            DefinedMiddlewares.Add(typeof(T));
+
+            return this;
+        }
+        
         public CoreBot RegisterHandler<T>() where T : BaseHandler
         {
             DefinedHandlers.Add(typeof(T));
@@ -48,11 +56,8 @@ namespace PowerBot.Lite
 
         public CoreBot Build()
         {
-            // Get all middlewares
-            var middlewares = ReflectiveEnumerator.GetEnumerableOfType<BaseMiddleware>();
-
             // Register middlewares
-            foreach (var middleware in middlewares)
+            foreach (var middleware in DefinedMiddlewares)
             {
                 _containerBuilder.RegisterType(middleware)
                     .As<IBaseMiddleware>()
@@ -60,7 +65,7 @@ namespace PowerBot.Lite
                     .WithAttributeFiltering();
             }
 
-            // Get all handler descriptors
+            // Build handler descriptors
             _handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
 
             // Register handlers
