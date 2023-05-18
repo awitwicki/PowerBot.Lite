@@ -3,10 +3,10 @@ using Telegram.Bot.Types.Enums;
 
 namespace PowerBot.Lite.Attributes
 {
-    public class MessageReaction : Attribute
+    public class MessageReactionAttribute : Attribute
     {
         public ChatAction ChatAction { get; set; }
-        public MessageReaction(ChatAction chatAction)
+        public MessageReactionAttribute(ChatAction chatAction)
         {
             this.ChatAction = chatAction;
         }

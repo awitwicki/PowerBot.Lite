@@ -19,9 +19,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
             //find and return chatAction
             foreach (var attribute in attributes)
             {
-                if (attribute.GetType() == typeof(MessageReaction))
+                if (attribute.GetType() == typeof(MessageReactionAttribute))
                 {
-                    var chatAction = ((MessageReaction)attribute).ChatAction;
+                    var chatAction = ((MessageReactionAttribute)attribute).ChatAction;
                     return chatAction;
                 }
             }
@@ -38,9 +38,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
             //find and return chatAction
             foreach (var attribute in attributes)
             {
-                if (attribute.GetType() == typeof(MessageHandler))
+                if (attribute.GetType() == typeof(MessageHandlerAttribute))
                 {
-                    var pattern = ((MessageHandler)attribute).Pattern;
+                    var pattern = ((MessageHandlerAttribute)attribute).Pattern;
 
                     //regex match
                     Match m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
@@ -95,14 +95,14 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         {
             Object[] attributes = methodInfo.GetCustomAttributes(true);
 
-            MessageTypeFilter updateTypeFilter = attributes
-                .Where(attribute => attribute.GetType() == typeof(MessageTypeFilter))
-                .Cast<MessageTypeFilter>()
+            MessageTypeFilterAttribute updateTypeFilterAttribute = attributes
+                .Where(attribute => attribute.GetType() == typeof(MessageTypeFilterAttribute))
+                .Cast<MessageTypeFilterAttribute>()
                 .FirstOrDefault();
 
-            if (updateTypeFilter != null)
+            if (updateTypeFilterAttribute != null)
             {
-                return updateTypeFilter.MessageType == update.Message.Type;
+                return updateTypeFilterAttribute.MessageType == update.Message.Type;
             }
 
             return true;

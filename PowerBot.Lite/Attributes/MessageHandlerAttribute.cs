@@ -2,11 +2,11 @@
 
 namespace PowerBot.Lite.Attributes
 {
-    public class MessageHandler : Attribute
+    public class MessageHandlerAttribute : Attribute
     {
         public string Pattern { get; set; }
 
-        public MessageHandler(string pattern)
+        public MessageHandlerAttribute(string pattern)
         {
             this.Pattern = pattern;
         }

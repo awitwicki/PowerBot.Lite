@@ -60,7 +60,7 @@ namespace PowerBot.Lite.HandlerInvokers
         {
             // TODO move this matching to other class
             // Matching for message text regex have the most priority than the others
-            if (update.Message.Text != null && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageHandler)))
+            if (update.Message.Text != null && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageHandlerAttribute)))
             {
                 // Pattern matching for message text
                 if (AttributeValidators.MatchMessageHandlerMethod(fastMethodInfo.GetMethodInfo(), update.Message.Text))
@@ -71,7 +71,7 @@ namespace PowerBot.Lite.HandlerInvokers
 
             // Message type
             // If method have universal update type attribute filter then check it
-            if (update.Type == UpdateType.Message && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageTypeFilter)))
+            if (update.Type == UpdateType.Message && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true).Any(y => y.GetType() == typeof(MessageTypeFilterAttribute)))
             {
                 // Pattern matching for message text
                 if (AttributeValidators.MatchMessageType(fastMethodInfo.GetMethodInfo(), update))
