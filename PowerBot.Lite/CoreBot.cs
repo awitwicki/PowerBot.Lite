@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Builder;
 using Autofac.Features.AttributeFilters;
 using PowerBot.Lite.HandlerInvokers;
 using PowerBot.Lite.Handlers;
@@ -7,15 +6,12 @@ using PowerBot.Lite.Middlewares;
 using PowerBot.Lite.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace PowerBot.Lite
 {
