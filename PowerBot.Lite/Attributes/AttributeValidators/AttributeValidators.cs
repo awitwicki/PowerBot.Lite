@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -17,14 +14,14 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Send chat action
         public static Nullable<ChatAction> GetChatActionAttributes(MethodInfo methodInfo)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             //find and return chatAction
             foreach (var attribute in attributes)
             {
-                if (attribute.GetType() == typeof(MessageReaction))
+                if (attribute.GetType() == typeof(MessageReactionAttribute))
                 {
-                    var chatAction = ((MessageReaction)attribute).ChatAction;
+                    var chatAction = ((MessageReactionAttribute)attribute).ChatAction;
                     return chatAction;
                 }
             }
@@ -36,17 +33,17 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match message text with method
         public static bool MatchMessageHandlerMethod(MethodInfo methodInfo, string inputText)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             //find and return chatAction
             foreach (var attribute in attributes)
             {
-                if (attribute.GetType() == typeof(MessageHandler))
+                if (attribute.GetType() == typeof(MessageHandlerAttribute))
                 {
-                    var pattern = ((MessageHandler)attribute).Pattern;
+                    var pattern = ((MessageHandlerAttribute)attribute).Pattern;
 
                     //regex match
-                    Match m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
+                    var m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
                     return m.Success;
                 }
             }
@@ -57,7 +54,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match callbackQuery data with method
         public static bool MatchCallbackQueryHandlerMethod(MethodInfo methodInfo, string inputText)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             //find and return chatAction
             foreach (var attribute in attributes)
@@ -67,7 +64,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
                     var pattern = ((CallbackQueryHandlerAttribute)attribute).DataPattern;
 
                     //regex match
-                    Match m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
+                    var m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
                     return m.Success;
                 }
             }
@@ -78,9 +75,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match update type
         public static bool MatchUpdateType(MethodInfo methodInfo, Update update)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
-            UpdateTypeFilterAttribute updateTypeFilter = attributes
+            var updateTypeFilter = attributes
                 .Where(attribute => attribute.GetType() == typeof(UpdateTypeFilterAttribute))
                 .Cast<UpdateTypeFilterAttribute>()
                 .FirstOrDefault();
@@ -96,16 +93,16 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match message type
         public static bool MatchMessageType(MethodInfo methodInfo, Update update)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
-            MessageTypeFilter updateTypeFilter = attributes
-                .Where(attribute => attribute.GetType() == typeof(MessageTypeFilter))
-                .Cast<MessageTypeFilter>()
+            var updateTypeFilterAttribute = attributes
+                .Where(attribute => attribute.GetType() == typeof(MessageTypeFilterAttribute))
+                .Cast<MessageTypeFilterAttribute>()
                 .FirstOrDefault();
 
-            if (updateTypeFilter != null)
+            if (updateTypeFilterAttribute != null)
             {
-                return updateTypeFilter.MessageType == update.Message.Type;
+                return updateTypeFilterAttribute.MessageType == update.Message.Type;
             }
 
             return true;

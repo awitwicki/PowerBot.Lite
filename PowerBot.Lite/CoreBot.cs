@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Builder;
 using Autofac.Features.AttributeFilters;
 using PowerBot.Lite.HandlerInvokers;
 using PowerBot.Lite.Handlers;
@@ -7,29 +6,28 @@ using PowerBot.Lite.Middlewares;
 using PowerBot.Lite.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace PowerBot.Lite
 {
     public class CoreBot
     {
-        public ITelegramBotClient botClient { get; set; }
+        public ITelegramBotClient BotClient { get; set; }
         private ContainerBuilder _containerBuilder { get; set; }
-        private List<HandlerDescriptor> _handlerDescriptors { get; set; }
+        private List<Type> DefinedMiddlewares { get; set; } = new List<Type>();
+        private HashSet<Type> DefinedHandlers { get; set; } = new HashSet<Type>();
+        private IEnumerable<HandlerDescriptor> _handlerDescriptors { get; set; }
         public CoreBot(string botToken)
         {
             // Create DI container
             _containerBuilder = new ContainerBuilder();
 
-            botClient = new TelegramBotClient(botToken);
+            BotClient = new TelegramBotClient(botToken);
         }
 
         public ContainerBuilder ContainerBuilder => _containerBuilder;
@@ -41,14 +39,25 @@ namespace PowerBot.Lite
 
             return this;
         }
+        
+        public CoreBot RegisterMiddleware<T>() where T : BaseMiddleware
+        {
+            DefinedMiddlewares.Add(typeof(T));
+
+            return this;
+        }
+        
+        public CoreBot RegisterHandler<T>() where T : BaseHandler
+        {
+            DefinedHandlers.Add(typeof(T));
+
+            return this;
+        }
 
         public CoreBot Build()
         {
-            // Get all middlewares
-            var middlewares = ReflectiveEnumerator.GetEnumerableOfType<BaseMiddleware>();
-
             // Register middlewares
-            foreach (var middleware in middlewares)
+            foreach (var middleware in DefinedMiddlewares)
             {
                 _containerBuilder.RegisterType(middleware)
                     .As<IBaseMiddleware>()
@@ -56,8 +65,8 @@ namespace PowerBot.Lite
                     .WithAttributeFiltering();
             }
 
-            // Get all handler descriptors
-            _handlerDescriptors = MessageInvoker.CollectHandlers();
+            // Build handler descriptors
+            _handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
 
             // Register handlers
             foreach (var handlerMethodType in _handlerDescriptors)
@@ -74,7 +83,7 @@ namespace PowerBot.Lite
             return this;
         }
 
-        public async Task StartReveiving()
+        public async Task StartReceiving()
         {
             // StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
             var receiverOptions = new ReceiverOptions
@@ -83,12 +92,12 @@ namespace PowerBot.Lite
                 ThrowPendingUpdates = true
             };
 
-            botClient.StartReceiving(
+            BotClient.StartReceiving(
               HandleUpdateAsync,
               HandleErrorAsync,
               receiverOptions);
 
-            var me = await botClient.GetMeAsync();
+            var me = await BotClient.GetMeAsync();
 
             Console.WriteLine($"Start listening for @{me.Username}");
         }
@@ -98,7 +107,8 @@ namespace PowerBot.Lite
             try
             {
                 // Get all methods to run to list
-                IEnumerable<FastMethodInfo> filteredFastMethods = MessageInvoker.FilterFastMethods(update, _handlerDescriptors);
+                var filteredFastMethods = FastMethodInfoUpdateMatcher
+                    .FilterFastMethods(update, _handlerDescriptors);
 
                 // Handle message delegate
                 var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods);
@@ -115,14 +125,14 @@ namespace PowerBot.Lite
 
         Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
-            var ErrorMessage = exception switch
+            var errorMessage = exception switch
             {
                 ApiRequestException apiRequestException
                     => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
 
-            Console.WriteLine(ErrorMessage);
+            Console.WriteLine(errorMessage);
             Console.WriteLine(exception.StackTrace);
 
             return Task.CompletedTask;

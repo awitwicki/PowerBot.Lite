@@ -1,6 +1,8 @@
-# PowerBot.Lite
+# PowerBot.Lite 
 
 [Telegram bot](https://github.com/TelegramBots/Telegram.Bot) wrapper.
+
+![Tests](https://img.shields.io/badge/PowerBot.Lite-V2.0-blue)
 
 ![Tests](https://img.shields.io/github/workflow/status/awitwicki/PowerBot.Lite/Build%20and%20test)
 ![Tests](https://img.shields.io/github/issues/awitwicki/PowerBot.Lite)
@@ -8,7 +10,7 @@
 ![Tests](https://img.shields.io/github/last-commit/awitwicki/PowerBot.Lite)
 
 ![Tests](https://img.shields.io/github/languages/top/awitwicki/PowerBot.Lite)
-![Tests](https://img.shields.io/badge/dotnet-6.0-blue)
+![Tests](https://img.shields.io/badge/dotnet-7.0-blue)
 ![Tests](https://img.shields.io/github/stars/awitwicki/PowerBot.Lite)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
@@ -25,18 +27,17 @@
 ```csharp
 using PowerBot.Lite;
 
-CoreBot botClient = new CoreBot("TOKEN")
+var botClient = new CoreBot("TOKEN")
+    .RegisterHandler<SampleHandler>()
     .Build();
 
 botClient.StartReveiving();
 
 // Wait for eternity
 await Task.Delay(Int32.MaxValue);
-
 ```
 
 3. Create class that inherits `BaseHandler` class and define bot methods:
-
 
 ```csharp
 class SampleHandler : BaseHandler
@@ -45,7 +46,7 @@ class SampleHandler : BaseHandler
     [MessageHandler("^/start$")]
     public async Task Start()
     {
-        string messageText = $"Hi! your id is {User.TelegramId}, chatId is {ChatId}.";
+        var messageText = $"Hi! your id is {User.TelegramId}, chatId is {ChatId}.";
         await BotClient.SendTextMessageAsync(ChatId, messageText);
     }
 
@@ -53,14 +54,14 @@ class SampleHandler : BaseHandler
     [MessageHandler("^/test$")]
     public async Task TestMethod()
     {
-        string messageText = $"Test passed successfully!";
+        var messageText = $"Test passed successfully!";
         await BotClient.SendTextMessageAsync(ChatId, messageText);
     }
 
     [MessageTypeFilter(MessageType.Voice)]
     public async Task VoiceMethod()
     {
-        string messageText = $"Voice message!";
+        var messageText = $"Voice message!";
         await BotClient.SendTextMessageAsync(ChatId, messageText);
     }
 }
@@ -78,7 +79,7 @@ For method matching `PowerBot.Lite` uses next attributes:
 ### `[MessageReaction(ChatAction.Typing)]`
 Makes bot, send defined `ChatAction` before runs matched method.
 
-### Message atribute filters:
+### Message attribute filters:
 
 ### `[MessageHandler(string pattern)]`
 Filter for text messages, `string pattern` - is regex matching pattern.
@@ -94,7 +95,14 @@ Filter for any updates by defined type (Message, InlineQuery, ChosenInlineResult
 
 ## Middleware
 
-Also You can define your own middlewares by creating class that inherits `BaseMiddleware` and make it by next template:
+Also You can define your own middlewares by creating class that inherits `BaseMiddleware` and register it in CoreBot builder it by next template:
+
+```csharp
+var botClient = new CoreBot("TOKEN")
+    .RegisterMiddleware<FirstMiddleware>()
+    .RegisterMiddleware<SecondMiddleware>()
+    ...
+```
 
 ```csharp
 public class FirstMiddleware : BaseMiddleware
@@ -111,9 +119,33 @@ public class FirstMiddleware : BaseMiddleware
 }
 ```
 
-## Depedency Injection
+```csharp
+public class SecondMiddleware : BaseMiddleware
+{
+    public override async Task Invoke(ITelegramBotClient bot, Update update, Func<Task> func)
+    {
+        Console.WriteLine("SecondMiddleware before _nextMiddleware log");
 
-`PowerBot.Lite` supports depedency injection, based on Autofac container provider.
+        // Do next middleware or process telegram.Update from defined handler if there no other defined middlewares.
+        await _nextMiddleware.Invoke(bot, update, func);
+
+        Console.WriteLine("SecondMiddleware after _nextMiddleware log");
+    }
+}
+```
+
+Console output:
+
+```
+FirstMiddleware before _nextMiddleware log
+SecondMiddleware before _nextMiddleware log
+SecondMiddleware after _nextMiddleware log
+FirstMiddleware after _nextMiddleware log
+```
+
+## Dependency Injection
+
+`PowerBot.Lite` supports dependency injection, based on Autofac container provider.
 
 To use it, firstly you need to define your DI services as class with interface:
 
@@ -143,7 +175,9 @@ public class RandomService : IRandomService
 And manually map them in `PowerBot.Lite` by using `RegisterContainers(...)` method:
 
 ```csharp
-CoreBot botClient = new CoreBot(botToken)
+var botClient = new CoreBot(botToken)
+    .RegisterMiddleware<BotMiddleware>()
+    .RegisterHandler<BotHandler>()
     .RegisterContainers(x => {
         x.RegisterType<RandomService>()
             .As<IRandomService>()
@@ -168,9 +202,8 @@ public class BotHandler : BaseHandler
     [MessageHandler("/start")]
     public Task Start()
     {
-        int randomValue = _randomService.Random(0, 100);
-
-        string messageText = $"Hi! Random integer is: {randomValue}";
+        var randomValue = _randomService.Random(0, 100);
+        var messageText = $"Hi! Random integer is: {randomValue}";
 
         return BotClient.SendTextMessageAsync(ChatId, messageText);
     }
@@ -187,11 +220,10 @@ public class BotMiddleware : BaseMiddleware
 
     public override async Task Invoke(ITelegramBotClient bot, Update update, Func<Task> func)
     {
-        int randomValue = _randomService.Random(0, 100);
+        var randomValue = _randomService.Random(0, 100);
         Console.WriteLine($"Random number is {randomValue}");
 
         await _nextMiddleware.Invoke(bot, update, func);
     }
 }
 ```
-

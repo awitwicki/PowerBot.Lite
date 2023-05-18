@@ -4,8 +4,6 @@ using PowerBot.Lite.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -14,13 +12,14 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public static class MiddlewareInvoker
     {
-        public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods)
+        public static async Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods)
         {
             try
             {
-                using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+                await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
                 {
-                    var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>();
+                    var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>()
+                        .ToArray();
 
                     // Without middlewares
                     if (!middlewares.Any())
@@ -30,10 +29,10 @@ namespace PowerBot.Lite.HandlerInvokers
                     }
 
                     // Recursively create middlewares action execute tree
-                    IBaseMiddleware firstMiddleware = middlewares.First();
+                    var firstMiddleware = middlewares.First();
 
                     // Push middlewares to tree
-                    foreach (IBaseMiddleware middleware in middlewares.Skip(1))
+                    foreach (var middleware in middlewares.Skip(1))
                     {
                         firstMiddleware.PushNextMiddleware(middleware);
                     }
