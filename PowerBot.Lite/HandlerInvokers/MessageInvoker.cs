@@ -21,18 +21,18 @@ namespace PowerBot.Lite.HandlerInvokers
             List<HandlerDescriptor> handlerDescriptors = new();
 
             // Get all handlers
-            IEnumerable<Type> handlers = ReflectiveEnumerator.GetEnumerableOfType<BaseHandler>();
+            var handlers = ReflectiveEnumerator.GetEnumerableOfType<BaseHandler>();
 
             foreach (var handlerType in handlers)
             {
                 // Find method in handler
-                MethodInfo[] handlerMethods = handlerType
+                var handlerMethods = handlerType
                     .GetMethods()
                     .Where(x => x.DeclaringType != typeof(BaseHandler))
                     .Where(x => x.DeclaringType != typeof(Object))
                     .ToArray();
 
-                IEnumerable<FastMethodInfo> fastMethodInfos = handlerMethods.Select(x => new FastMethodInfo(x, handlerType));
+                var fastMethodInfos = handlerMethods.Select(x => new FastMethodInfo(x, handlerType));
 
                 handlerDescriptors.Add(new HandlerDescriptor(handlerType, fastMethodInfos));
             }
@@ -141,7 +141,7 @@ namespace PowerBot.Lite.HandlerInvokers
 
         public async static Task InvokeUpdate(ITelegramBotClient botClient, Update update, IEnumerable<FastMethodInfo> handlerMethods)
         {
-            foreach (FastMethodInfo fastMethodInfo in handlerMethods)
+            foreach (var fastMethodInfo in handlerMethods)
             {
                 try
                 {
@@ -149,7 +149,7 @@ namespace PowerBot.Lite.HandlerInvokers
                     var chatAction = AttributeValidators.GetChatActionAttributes(fastMethodInfo.GetMethodInfo());
                     if (chatAction.HasValue)
                     {
-                        long chatId = update.Message?.Chat.Id! ?? update.CallbackQuery?.Message?.Chat.Id! ?? -1;
+                        var chatId = update.Message?.Chat.Id! ?? update.CallbackQuery?.Message?.Chat.Id! ?? -1;
                         await botClient.SendChatActionAsync(chatId, chatAction.Value);
                     }
 

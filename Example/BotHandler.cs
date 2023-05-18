@@ -26,9 +26,9 @@ namespace Example
         [MessageHandler("/start")]
         public Task Start()
         {
-            int randomValue = _randomService.Random(0, 100);
+            var randomValue = _randomService.Random(0, 100);
 
-            string messageText = $"Hi! Random integer is: {randomValue}";
+            var messageText = $"Hi! Random integer is: {randomValue}";
 
             return BotClient.SendTextMessageAsync(ChatId, messageText);
         }

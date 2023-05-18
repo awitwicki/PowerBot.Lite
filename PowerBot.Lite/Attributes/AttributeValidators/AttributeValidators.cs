@@ -14,7 +14,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Send chat action
         public static Nullable<ChatAction> GetChatActionAttributes(MethodInfo methodInfo)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             //find and return chatAction
             foreach (var attribute in attributes)
@@ -33,7 +33,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match message text with method
         public static bool MatchMessageHandlerMethod(MethodInfo methodInfo, string inputText)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             //find and return chatAction
             foreach (var attribute in attributes)
@@ -43,7 +43,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
                     var pattern = ((MessageHandlerAttribute)attribute).Pattern;
 
                     //regex match
-                    Match m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
+                    var m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
                     return m.Success;
                 }
             }
@@ -54,7 +54,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match callbackQuery data with method
         public static bool MatchCallbackQueryHandlerMethod(MethodInfo methodInfo, string inputText)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
             //find and return chatAction
             foreach (var attribute in attributes)
@@ -64,7 +64,7 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
                     var pattern = ((CallbackQueryHandlerAttribute)attribute).DataPattern;
 
                     //regex match
-                    Match m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
+                    var m = Regex.Match(inputText, pattern, RegexOptions.IgnoreCase);
                     return m.Success;
                 }
             }
@@ -75,9 +75,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match update type
         public static bool MatchUpdateType(MethodInfo methodInfo, Update update)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
-            UpdateTypeFilterAttribute updateTypeFilter = attributes
+            var updateTypeFilter = attributes
                 .Where(attribute => attribute.GetType() == typeof(UpdateTypeFilterAttribute))
                 .Cast<UpdateTypeFilterAttribute>()
                 .FirstOrDefault();
@@ -93,9 +93,9 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
         // Match message type
         public static bool MatchMessageType(MethodInfo methodInfo, Update update)
         {
-            Object[] attributes = methodInfo.GetCustomAttributes(true);
+            var attributes = methodInfo.GetCustomAttributes(true);
 
-            MessageTypeFilterAttribute updateTypeFilterAttribute = attributes
+            var updateTypeFilterAttribute = attributes
                 .Where(attribute => attribute.GetType() == typeof(MessageTypeFilterAttribute))
                 .Cast<MessageTypeFilterAttribute>()
                 .FirstOrDefault();

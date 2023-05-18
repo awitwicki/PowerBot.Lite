@@ -28,10 +28,10 @@ namespace PowerBot.Lite.HandlerInvokers
                     }
 
                     // Recursively create middlewares action execute tree
-                    IBaseMiddleware firstMiddleware = middlewares.First();
+                    var firstMiddleware = middlewares.First();
 
                     // Push middlewares to tree
-                    foreach (IBaseMiddleware middleware in middlewares.Skip(1))
+                    foreach (var middleware in middlewares.Skip(1))
                     {
                         firstMiddleware.PushNextMiddleware(middleware);
                     }

@@ -8,7 +8,7 @@ namespace PowerBot.Lite
     {
         public static IEnumerable<Type> GetEnumerableOfType<T>() where T : class
         {
-            List<Type> classes = AppDomain.CurrentDomain
+            var classes = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .SelectMany(x =>
                     x.GetTypes()

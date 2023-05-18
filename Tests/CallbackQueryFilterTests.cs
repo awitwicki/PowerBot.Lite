@@ -13,7 +13,7 @@ public class CallbackQueryFilterTest
         // Create mock update type
         var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-        FastMethodInfo matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler2.UpdateCallbackQueryFirst));
@@ -25,7 +25,7 @@ public class CallbackQueryFilterTest
         // Create mock update type
         var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-        FastMethodInfo matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateRandomCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler2.UpdateCallbackQuerySecond));
@@ -37,7 +37,7 @@ public class CallbackQueryFilterTest
         // Create mock update type
         var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-        FastMethodInfo matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateCallbackQueryFirst));
@@ -51,7 +51,7 @@ public class CallbackQueryFilterTest
 
         var handlerDescriptors = MessageInvoker.CollectHandlers();
 
-        FastMethodInfo matchedHandlerMethod = MessageInvoker
+        var matchedHandlerMethod = MessageInvoker
             .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), UpdateBuilder.UpdateRandomCallbackQuery);
 
         Assert.True(matchedHandlerMethod.GetMethodInfo().Name == nameof(TestHandler.UpdateCallbackQuerySecond));

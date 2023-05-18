@@ -94,7 +94,7 @@ namespace PowerBot.Lite
             try
             {
                 // Get all methods to run to list
-                IEnumerable<FastMethodInfo> filteredFastMethods = MessageInvoker.FilterFastMethods(update, _handlerDescriptors);
+                var filteredFastMethods = MessageInvoker.FilterFastMethods(update, _handlerDescriptors);
 
                 // Handle message delegate
                 var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods);
