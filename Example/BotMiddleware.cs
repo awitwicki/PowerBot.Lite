@@ -10,7 +10,7 @@ namespace Example
         {
             Console.WriteLine("FirstMiddleware before _nextMiddleware log");
 
-            await _nextMiddleware.Invoke(bot, update, func);
+            await NextMiddleware.Invoke(bot, update, func);
 
             Console.WriteLine("FirstMiddleware after _nextMiddleware log");
         }
@@ -22,7 +22,7 @@ namespace Example
         {
             Console.WriteLine("SecondMiddleware before _nextMiddleware log");
 
-            await _nextMiddleware.Invoke(bot, update, func);
+            await NextMiddleware.Invoke(bot, update, func);
 
             Console.WriteLine("SecondMiddleware after _nextMiddleware log");
         }

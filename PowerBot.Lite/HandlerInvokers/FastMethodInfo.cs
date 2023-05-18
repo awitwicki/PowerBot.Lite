@@ -19,7 +19,9 @@ namespace PowerBot.Lite.HandlerInvokers
             _methodInfo = methodInfo;
             var instanceExpression = Expression.Parameter(typeof(object), "instance");
 
-            var callExpression = Expression.Call(!methodInfo.IsStatic ? Expression.Convert(instanceExpression, methodInfo.ReflectedType) : null, methodInfo);
+            var callExpression = Expression.Call(
+                !methodInfo.IsStatic ? Expression.Convert(instanceExpression, methodInfo.ReflectedType!) : null,
+                methodInfo);
 
             var taskDelegate = Expression
                 .Lambda<TaskDelegate>(callExpression, instanceExpression)

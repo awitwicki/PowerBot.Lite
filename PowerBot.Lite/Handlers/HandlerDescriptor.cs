@@ -6,15 +6,15 @@ namespace PowerBot.Lite.Handlers
 {
     public class HandlerDescriptor
     {
-        private Type _handlerType { get; set; }
-        public Type GetHandlerType() => _handlerType;
-        private IEnumerable<FastMethodInfo> _methodInfos { get; set; }
-        public IEnumerable<FastMethodInfo> GetMethodInfos() => _methodInfos;
+        private Type HandlerType { get; set; }
+        public Type GetHandlerType() => HandlerType;
+        private IEnumerable<FastMethodInfo> MethodInfos { get; set; }
+        public IEnumerable<FastMethodInfo> GetMethodInfos() => MethodInfos;
 
         public HandlerDescriptor(Type handlerType, IEnumerable<FastMethodInfo> methodInfos)
         {
-            _handlerType = handlerType;
-            _methodInfos = methodInfos;
+            HandlerType = handlerType;
+            MethodInfos = methodInfos;
         }
     }
 }

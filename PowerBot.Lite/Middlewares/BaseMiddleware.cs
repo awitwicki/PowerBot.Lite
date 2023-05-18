@@ -13,19 +13,19 @@ namespace PowerBot.Lite.Middlewares
 
     public abstract class BaseMiddleware : IBaseMiddleware
     {
-        public IBaseMiddleware _nextMiddleware { get; set; }
+        public IBaseMiddleware NextMiddleware { get; set; }
 
         public abstract Task Invoke(ITelegramBotClient bot, Update update, Func<Task> func);
 
         public void PushNextMiddleware(IBaseMiddleware nextMiddleware)
         {
-            if (_nextMiddleware == null)
+            if (NextMiddleware == null)
             {
-                _nextMiddleware = nextMiddleware;
+                NextMiddleware = nextMiddleware;
             }
             else
             {
-                _nextMiddleware.PushNextMiddleware(nextMiddleware);
+                NextMiddleware.PushNextMiddleware(nextMiddleware);
             }
         }
     }
