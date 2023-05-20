@@ -32,18 +32,32 @@ public static class UpdateBuilder
             LeftChatMember = new User { Id = 234234 } 
         }
     };
-    public static Update UpdateCallbackQuery => new()
+    public static Update UpdateCallbackQueryBbb => new()
     {
         CallbackQuery = new CallbackQuery
         {
             Data = "bbb"
         }
     };
-    public static Update UpdateRandomCallbackQuery => new()
+    public static Update UpdateCallbackQueryLorem => new()
     {
         CallbackQuery = new CallbackQuery
         {
-            Data = "loorem ipsum"
+            Data = "lorem"
+        }
+    };
+    public static Update UpdateRandomCallbackQueryLoremIpsum => new()
+    {
+        CallbackQuery = new CallbackQuery
+        {
+            Data = "lorem_ipsum"
+        }
+    };
+    public static Update UpdateRandomCallbackQueryGlobal => new()
+    {
+        CallbackQuery = new CallbackQuery
+        {
+            Data = "Global"
         }
     };
 }

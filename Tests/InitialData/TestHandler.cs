@@ -32,13 +32,13 @@ internal class TestHandler : BaseHandler
     }
 
     [CallbackQueryHandlerAttribute("bbb")]
-    public Task UpdateCallbackQueryFirst()
+    public Task UpdateCallbackQueryDataBbb()
     {
         return Task.CompletedTask;
     }
 
     [UpdateTypeFilterAttribute(UpdateType.CallbackQuery)]
-    public Task UpdateCallbackQuerySecond()
+    public Task UpdateCallbackQueryGlobal()
     {
         return Task.CompletedTask;
     }

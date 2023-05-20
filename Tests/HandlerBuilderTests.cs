@@ -14,22 +14,22 @@ public class HandlerBuilderTests
     {
         var handlerTypes = new List<Type> { typeof(TestHandler) };
         var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
-            .ToArray();
+            .ToList();
 
-        Assert.True(handlerDescriptors.Length == 1);
-        Assert.True(handlerDescriptors.First().GetHandlerType() == typeof(TestHandler));
+        Assert.Single(handlerDescriptors);
+        Assert.Equal(typeof(TestHandler), handlerDescriptors.First().GetHandlerType());
     }
     
     [Theory]
     [InlineData(typeof(TestHandler), 6)]
-    [InlineData(typeof(TestHandler2), 2)]
+    [InlineData(typeof(TestHandler2), 3)]
     public void BuildHandlerDescriptor_WithTestHandler_ShouldContainExactCountOfFastMethodInfos(Type handlerType, int expectedMethodCount)
     {
         var handlerDescriptors = HandlerBuilder
             .BuildHandlerDescriptors(new List<Type> { handlerType })
             .ToArray();
 
-        Assert.True(handlerDescriptors.First().GetMethodInfos().Count() == expectedMethodCount);
+        Assert.Equal(expectedMethodCount, handlerDescriptors.First().GetMethodInfos().Count());
     }
     
     [Fact]
@@ -39,9 +39,9 @@ public class HandlerBuilderTests
         var handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(handlerTypes)
             .ToArray();
 
-        Assert.True(handlerDescriptors.Length == 2);
-        Assert.True(handlerDescriptors.First().GetHandlerType() == typeof(TestHandler));
-        Assert.True(handlerDescriptors.Last().GetHandlerType() == typeof(TestHandler2));
+        Assert.Equal(2, handlerDescriptors.Length);
+        Assert.Equal(typeof(TestHandler), handlerDescriptors.First().GetHandlerType());
+        Assert.Equal(typeof(TestHandler2),handlerDescriptors.Last().GetHandlerType());
     }
     
     [Fact]

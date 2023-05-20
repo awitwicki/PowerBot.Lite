@@ -7,14 +7,20 @@ namespace Tests.InitialData;
 
 internal class TestHandler2 : BaseHandler
 {
-    [CallbackQueryHandler("bbb")]
-    public Task UpdateCallbackQueryFirst()
+    [CallbackQueryHandler("lorem$")]
+    public Task UpdateCallbackQueryLorem()
+    {
+        return Task.CompletedTask;
+    }
+    
+    [CallbackQueryHandler("lorem_ipsum")]
+    public Task UpdateCallbackQueryLoremIpsum()
     {
         return Task.CompletedTask;
     }
 
     [UpdateTypeFilter(UpdateType.CallbackQuery)]
-    public Task UpdateCallbackQuerySecond()
+    public Task UpdateCallbackQueryGlobal()
     {
         return Task.CompletedTask;
     }
