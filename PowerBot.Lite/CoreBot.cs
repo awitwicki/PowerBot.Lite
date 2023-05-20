@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PowerBot.Lite.Exceptions;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
@@ -18,24 +19,22 @@ namespace PowerBot.Lite
     public class CoreBot
     {
         public ITelegramBotClient BotClient { get; set; }
-        private ContainerBuilder _containerBuilder { get; set; }
-        private List<Type> DefinedMiddlewares { get; set; } = new List<Type>();
-        private HashSet<Type> DefinedHandlers { get; set; } = new HashSet<Type>();
+        public readonly ContainerBuilder ContainerBuilder = new();
+        private List<Type> DefinedMiddlewares { get; set; } = new();
+        private HashSet<Type> DefinedHandlers { get; set; } = new();
         private IEnumerable<HandlerDescriptor> _handlerDescriptors { get; set; }
         public CoreBot(string botToken)
         {
-            // Create DI container
-            _containerBuilder = new ContainerBuilder();
+            if (string.IsNullOrEmpty(botToken))
+                throw new ArgumentNullException(nameof(botToken));
 
             BotClient = new TelegramBotClient(botToken);
         }
 
-        public ContainerBuilder ContainerBuilder => _containerBuilder;
-
         public CoreBot RegisterContainers(Action<ContainerBuilder> action)
         {
             // Register containers from client app
-            action.Invoke(_containerBuilder);
+            action.Invoke(ContainerBuilder);
 
             return this;
         }
@@ -56,10 +55,14 @@ namespace PowerBot.Lite
 
         public CoreBot Build()
         {
+            // If no middlewares or handlers defined, throw exception
+            if (DefinedMiddlewares.Count == 0 && DefinedHandlers.Count == 0)
+                throw new NotDefinedAnyHandlersOrMiddlewaresException("No middlewares or handlers defined");
+            
             // Register middlewares
             foreach (var middleware in DefinedMiddlewares)
             {
-                _containerBuilder.RegisterType(middleware)
+                ContainerBuilder.RegisterType(middleware)
                     .As<IBaseMiddleware>()
                     .InstancePerLifetimeScope()
                     .WithAttributeFiltering();
@@ -71,14 +74,14 @@ namespace PowerBot.Lite
             // Register handlers
             foreach (var handlerMethodType in _handlerDescriptors)
             {
-                _containerBuilder.RegisterType(handlerMethodType.GetHandlerType())
+                ContainerBuilder.RegisterType(handlerMethodType.GetHandlerType())
                     .Named(handlerMethodType.GetHandlerType().Name, handlerMethodType.GetHandlerType())
                     .InstancePerLifetimeScope()
                     .WithAttributeFiltering();
             }
 
             // Build container
-            DIContainerInstance.Container = _containerBuilder.Build();
+            DIContainerInstance.Container = ContainerBuilder.Build();
 
             return this;
         }

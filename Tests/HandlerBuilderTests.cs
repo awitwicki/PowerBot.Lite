@@ -21,7 +21,7 @@ public class HandlerBuilderTests
     }
     
     [Theory]
-    [InlineData(typeof(TestHandler), 6)]
+    [InlineData(typeof(TestHandler), 7)]
     [InlineData(typeof(TestHandler2), 3)]
     public void BuildHandlerDescriptor_WithTestHandler_ShouldContainExactCountOfFastMethodInfos(Type handlerType, int expectedMethodCount)
     {

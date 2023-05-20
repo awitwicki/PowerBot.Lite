@@ -2,7 +2,7 @@
 
 [Telegram bot](https://github.com/TelegramBots/Telegram.Bot) wrapper.
 
-![Tests](https://img.shields.io/badge/PowerBot.Lite-V2.1-blue)
+![Tests](https://img.shields.io/badge/PowerBot.Lite-V2.1.1-blue)
 
 [![Tests](https://img.shields.io/nuget/v/PowerBot.Lite)](https://www.nuget.org/packages/PowerBot.Lite/)
 

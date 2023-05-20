@@ -42,4 +42,10 @@ internal class TestHandler : BaseHandler
     {
         return Task.CompletedTask;
     }
+    
+    [MessageTypeFilter(MessageType.Voice)]
+    public Task UpdateVoice()
+    {
+        return Task.CompletedTask;
+    }
 }

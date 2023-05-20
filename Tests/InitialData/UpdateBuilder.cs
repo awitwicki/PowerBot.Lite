@@ -18,6 +18,16 @@ public static class UpdateBuilder
             Text = "/test"
         }
     };
+    public static Update UpdateVoice => new()
+    {
+        Message = new Message
+        {
+            Voice = new()
+            {
+                FileId = "sdfsdf"
+            }
+        },
+    };
     public static Update UpdateChatMembersAdded => new()
     {
         Message = new Message

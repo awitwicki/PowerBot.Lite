@@ -46,5 +46,9 @@ public class UpdateWithComparedHandlerMethodList : TheoryData<Update, Type, Meth
         Add(UpdateBuilder.UpdateChatMembersLeft,
             typeof(TestHandler),
             typeof(TestHandler).GetMethod(nameof(TestHandler.UpdateChatMemberLeft)));
+        
+        Add(UpdateBuilder.UpdateVoice,
+            typeof(TestHandler),
+            typeof(TestHandler).GetMethod(nameof(TestHandler.UpdateVoice)));
     }
 }
