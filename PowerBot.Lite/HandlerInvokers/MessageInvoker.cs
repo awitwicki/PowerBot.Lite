@@ -10,7 +10,7 @@ using Autofac;
 
 namespace PowerBot.Lite.HandlerInvokers
 {
-    public static class MessageInvoker
+    internal static class MessageInvoker
     {
         public static async Task InvokeUpdate(
             ITelegramBotClient botClient,

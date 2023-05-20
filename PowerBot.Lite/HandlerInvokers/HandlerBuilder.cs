@@ -5,7 +5,7 @@ using PowerBot.Lite.Handlers;
 
 namespace PowerBot.Lite.HandlerInvokers;
 
-public static class HandlerBuilder
+internal static class HandlerBuilder
 {
     public static IEnumerable<HandlerDescriptor> BuildHandlerDescriptors(IEnumerable<Type> handlerTypes)
     {

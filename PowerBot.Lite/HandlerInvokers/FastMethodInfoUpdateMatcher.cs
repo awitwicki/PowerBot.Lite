@@ -8,7 +8,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace PowerBot.Lite.HandlerInvokers;
 
-public static class FastMethodInfoUpdateMatcher
+internal static class FastMethodInfoUpdateMatcher
 {
     public static IEnumerable<FastMethodInfo> FilterFastMethods(Update update,
         IEnumerable<HandlerDescriptor> handlerDescriptors)

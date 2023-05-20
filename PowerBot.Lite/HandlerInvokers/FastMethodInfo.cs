@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace PowerBot.Lite.HandlerInvokers
 {
-    public class FastMethodInfo
+    internal class FastMethodInfo
     {
         private delegate void TaskDelegate(object instance);
         private TaskDelegate Delegate { get; }

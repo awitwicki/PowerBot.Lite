@@ -2,9 +2,11 @@
 
 [Telegram bot](https://github.com/TelegramBots/Telegram.Bot) wrapper.
 
-![Tests](https://img.shields.io/badge/PowerBot.Lite-V2.0-blue)
+![Tests](https://img.shields.io/badge/PowerBot.Lite-V2.1-blue)
 
-![Tests](https://img.shields.io/github/workflow/status/awitwicki/PowerBot.Lite/Build%20and%20test)
+[![Tests](https://img.shields.io/nuget/v/PowerBot.Lite)](https://www.nuget.org/packages/PowerBot.Lite/)
+
+[![Build and test](https://github.com/awitwicki/PowerBot.Lite/actions/workflows/dotnet.yml/badge.svg)](https://github.com/awitwicki/PowerBot.Lite/actions/workflows/dotnet.yml)
 ![Tests](https://img.shields.io/github/issues/awitwicki/PowerBot.Lite)
 ![Tests](https://img.shields.io/github/issues-pr/awitwicki/PowerBot.Lite)
 ![Tests](https://img.shields.io/github/last-commit/awitwicki/PowerBot.Lite)

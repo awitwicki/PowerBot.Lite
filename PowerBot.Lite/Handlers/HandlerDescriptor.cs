@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace PowerBot.Lite.Handlers
 {
-    public class HandlerDescriptor
+    internal class HandlerDescriptor
     {
         private Type HandlerType { get; set; }
         public Type GetHandlerType() => HandlerType;
