@@ -36,7 +36,7 @@ public class FastMethodInfoUpdateMatcherTests
             .ToArray();
 
         var matchedHandlerMethod = FastMethodInfoUpdateMatcher
-            .MatchHandlerMethod(handlerDescriptors.First().GetMethodInfos(), update);
+            .MatchHandlerMethod(handlerDescriptors[0].GetMethodInfos(), update);
         
         Assert.Equal(expectedMethodInfo, matchedHandlerMethod.GetMethodInfo());
     }

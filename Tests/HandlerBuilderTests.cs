@@ -17,7 +17,7 @@ public class HandlerBuilderTests
             .ToList();
 
         Assert.Single(handlerDescriptors);
-        Assert.Equal(typeof(TestHandler), handlerDescriptors.First().GetHandlerType());
+        Assert.Equal(typeof(TestHandler), handlerDescriptors[0].GetHandlerType());
     }
     
     [Theory]
@@ -29,7 +29,7 @@ public class HandlerBuilderTests
             .BuildHandlerDescriptors(new List<Type> { handlerType })
             .ToArray();
 
-        Assert.Equal(expectedMethodCount, handlerDescriptors.First().GetMethodInfos().Count());
+        Assert.Equal(expectedMethodCount, handlerDescriptors[0].GetMethodInfos().Count());
     }
     
     [Fact]
@@ -40,14 +40,14 @@ public class HandlerBuilderTests
             .ToArray();
 
         Assert.Equal(2, handlerDescriptors.Length);
-        Assert.Equal(typeof(TestHandler), handlerDescriptors.First().GetHandlerType());
+        Assert.Equal(typeof(TestHandler), handlerDescriptors[0].GetHandlerType());
         Assert.Equal(typeof(TestHandler2),handlerDescriptors.Last().GetHandlerType());
     }
     
     [Fact]
     public void BuildHandlerDescriptors_WithInvalidType_ThrowsArgumentException()
     {
-        var handlerTypes = new List<Type> { typeof(TestHandler), typeof(String) };
+        var handlerTypes = new List<Type> { typeof(TestHandler), typeof(string) };
 
         Assert.Throws<ArgumentException>(() => HandlerBuilder.BuildHandlerDescriptors(handlerTypes));
     }
