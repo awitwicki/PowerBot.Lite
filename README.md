@@ -14,9 +14,15 @@
 ![Tests](https://img.shields.io/github/stars/awitwicki/PowerBot.Lite)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-```diff
-- This project is in early stage!
-```
+Unfortunately, I don't have much time to actively maintain the project, but I make occasional changes.
+Fortunately, this library works well in my telegram bots and hasn't encountered major issues.
+If you're interested or would like to contribute, please check out the code and feel free to join!
+Welcome to the community and the development of this project.
+
+## Main info
+* Library is based on Telegram.Bot 19.0.0 and Telegram.Bot.Extensions.Polling with Version 1.0.2 which is referred to official Telegram Bot API version 7.0
+* There is simple [Example](Example) project.
+* Telegram [channel](https://t.me/powerbot_wrapper) with community.
 
 ## How to use
 
