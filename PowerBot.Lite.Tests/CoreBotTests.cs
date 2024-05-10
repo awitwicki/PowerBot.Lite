@@ -1,5 +1,4 @@
 ﻿using System;
-using PowerBot.Lite;
 using PowerBot.Lite.Exceptions;
 using PowerBot.Lite.Tests.InitialData;
 using Xunit;

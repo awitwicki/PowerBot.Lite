@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Telegram.Bot;
-using System.Threading.Tasks;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using PowerBot.Lite.Attributes;
 using PowerBot.Lite.Handlers;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 using Example.Services;
 using PowerBot.Lite.Utils;
 
