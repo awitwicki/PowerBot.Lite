@@ -1,10 +1,10 @@
 ﻿using System;
 using PowerBot.Lite;
 using PowerBot.Lite.Exceptions;
-using Tests.InitialData;
+using PowerBot.Lite.Tests.InitialData;
 using Xunit;
 
-namespace Tests;
+namespace PowerBot.Lite.Tests;
 
 public class CoreBotTests
 {

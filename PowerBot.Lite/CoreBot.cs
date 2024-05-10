@@ -22,7 +22,7 @@ namespace PowerBot.Lite
         public readonly ContainerBuilder ContainerBuilder = new();
         private List<Type> DefinedMiddlewares { get; set; } = new();
         private HashSet<Type> DefinedHandlers { get; set; } = new();
-        private IEnumerable<HandlerDescriptor> _handlerDescriptors { get; set; }
+        private IEnumerable<HandlerDescriptor> HandlerDescriptors { get; set; }
         public CoreBot(string botToken)
         {
             if (string.IsNullOrEmpty(botToken))
@@ -69,10 +69,10 @@ namespace PowerBot.Lite
             }
 
             // Build handler descriptors
-            _handlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
+            HandlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
 
             // Register handlers
-            foreach (var handlerMethodType in _handlerDescriptors)
+            foreach (var handlerMethodType in HandlerDescriptors)
             {
                 ContainerBuilder.RegisterType(handlerMethodType.GetHandlerType())
                     .Named(handlerMethodType.GetHandlerType().Name, handlerMethodType.GetHandlerType())
@@ -91,7 +91,6 @@ namespace PowerBot.Lite
             // StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
             var receiverOptions = new ReceiverOptions
             {
-                AllowedUpdates = { },
                 ThrowPendingUpdates = true
             };
 
@@ -111,7 +110,7 @@ namespace PowerBot.Lite
             {
                 // Get all methods to run to list
                 var filteredFastMethods = FastMethodInfoUpdateMatcher
-                    .FilterFastMethods(update, _handlerDescriptors);
+                    .FilterFastMethods(update, HandlerDescriptors);
 
                 // Handle message delegate
                 var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods);

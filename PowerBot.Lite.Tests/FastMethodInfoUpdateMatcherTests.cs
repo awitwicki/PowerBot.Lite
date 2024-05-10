@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PowerBot.Lite.HandlerInvokers;
+using PowerBot.Lite.Tests.InitialData;
 using Telegram.Bot.Types;
-using Tests.InitialData;
 using Xunit;
 
-namespace Tests;
+namespace PowerBot.Lite.Tests;
 
 public class FastMethodInfoUpdateMatcherTests
 {

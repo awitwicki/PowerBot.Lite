@@ -4,7 +4,7 @@ using PowerBot.Lite.Middlewares;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Tests.InitialData;
+namespace PowerBot.Lite.Tests.InitialData;
 
 public class TestMiddleware : BaseMiddleware
 {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{117F0B9B-6228-4EBF-A351-64AE5AD36BF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerBot.Lite.Tests", "PowerBot.Lite.Tests\PowerBot.Lite.Tests.csproj", "{117F0B9B-6228-4EBF-A351-64AE5AD36BF7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerBot.Lite", "PowerBot.Lite\PowerBot.Lite.csproj", "{76D88E3B-CA12-4507-AA52-65765A5D0CCE}"
 EndProject

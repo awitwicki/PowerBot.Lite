@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using PowerBot.Lite.HandlerInvokers;
-using Tests.InitialData;
+using PowerBot.Lite.Tests.InitialData;
 using Xunit;
 
-namespace Tests;
+namespace PowerBot.Lite.Tests;
 
 public class HandlerBuilderTests
 {

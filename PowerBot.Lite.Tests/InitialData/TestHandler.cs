@@ -3,7 +3,7 @@ using PowerBot.Lite.Attributes;
 using PowerBot.Lite.Handlers;
 using Telegram.Bot.Types.Enums;
 
-namespace Tests.InitialData;
+namespace PowerBot.Lite.Tests.InitialData;
 
 internal class TestHandler : BaseHandler
 {
@@ -31,13 +31,13 @@ internal class TestHandler : BaseHandler
         return Task.CompletedTask;
     }
 
-    [CallbackQueryHandlerAttribute("bbb")]
+    [CallbackQueryHandler("bbb")]
     public Task UpdateCallbackQueryDataBbb()
     {
         return Task.CompletedTask;
     }
 
-    [UpdateTypeFilterAttribute(UpdateType.CallbackQuery)]
+    [UpdateTypeFilter(UpdateType.CallbackQuery)]
     public Task UpdateCallbackQueryGlobal()
     {
         return Task.CompletedTask;

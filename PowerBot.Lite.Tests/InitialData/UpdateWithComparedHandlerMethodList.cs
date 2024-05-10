@@ -3,7 +3,7 @@ using System.Reflection;
 using Telegram.Bot.Types;
 using Xunit;
 
-namespace Tests.InitialData;
+namespace PowerBot.Lite.Tests.InitialData;
 
 public class UpdateWithComparedHandlerMethodList : TheoryData<Update, Type, MethodInfo>
 {

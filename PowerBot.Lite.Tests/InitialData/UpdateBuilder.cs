@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types;
 
-namespace Tests.InitialData;
+namespace PowerBot.Lite.Tests.InitialData;
 
 public static class UpdateBuilder
 {

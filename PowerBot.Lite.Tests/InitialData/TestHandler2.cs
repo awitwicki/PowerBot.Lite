@@ -3,7 +3,7 @@ using PowerBot.Lite.Attributes;
 using PowerBot.Lite.Handlers;
 using Telegram.Bot.Types.Enums;
 
-namespace Tests.InitialData;
+namespace PowerBot.Lite.Tests.InitialData;
 
 internal class TestHandler2 : BaseHandler
 {
