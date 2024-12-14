@@ -7,7 +7,7 @@ namespace PowerBot.Lite.Tests;
 
 public class CoreBotTests
 {
-    const string Token = "TELEGRAM_BOT_TOKEN";
+    const string Token = "000000000:AAAA-aaaaaaaaaaaaaaaaaaaaa-aaaaaaaa";
 
     [Fact] public void CoreBot_WithValidHandler_BuildsSuccessfully()
     {

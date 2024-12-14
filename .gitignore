@@ -1,5 +1,9 @@
 # Dotnet files
 .vs
 .idea
+*.user
 bin
 obj
+
+# Macos files
+.DS_Store

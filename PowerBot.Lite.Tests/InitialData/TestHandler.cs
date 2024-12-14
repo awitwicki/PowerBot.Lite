@@ -19,13 +19,13 @@ internal class TestHandler : BaseHandler
         return Task.CompletedTask;
     }
 
-    [MessageTypeFilter(MessageType.ChatMembersAdded)]
+    [MessageTypeFilter(MessageType.NewChatMembers)]
     public Task UpdateChatMembersAdded()
     {
         return Task.CompletedTask;
     }
 
-    [MessageTypeFilter(MessageType.ChatMemberLeft)]
+    [MessageTypeFilter(MessageType.LeftChatMember)]
     public Task UpdateChatMemberLeft()
     {
         return Task.CompletedTask;
