@@ -25,13 +25,13 @@ namespace Example
 
             var messageText = $"Hi {userMention}! Random integer is: {randomValue}";
 
-            return BotClient.SendTextMessageAsync(ChatId, messageText);
+            return BotClient.SendMessage(chatId: ChatId, text: messageText);
         }
 
         [MessageTypeFilter(MessageType.Text)]
         public Task TextMethod()
         {
-            return BotClient.SendTextMessageAsync(ChatId, "Any text message trigger");
+            return BotClient.SendMessage(chatId: ChatId, text:  "Any text message trigger");
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using PowerBot.Lite.Exceptions;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 
 namespace PowerBot.Lite
@@ -91,7 +91,7 @@ namespace PowerBot.Lite
             // StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
             var receiverOptions = new ReceiverOptions
             {
-                ThrowPendingUpdates = true
+                DropPendingUpdates = true
             };
 
             BotClient.StartReceiving(
@@ -99,7 +99,7 @@ namespace PowerBot.Lite
               HandleErrorAsync,
               receiverOptions);
 
-            var me = await BotClient.GetMeAsync();
+            var me = await BotClient.GetMe();
 
             Console.WriteLine($"Start listening for @{me.Username}");
         }

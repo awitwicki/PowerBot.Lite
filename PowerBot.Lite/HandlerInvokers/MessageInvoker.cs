@@ -26,7 +26,7 @@ namespace PowerBot.Lite.HandlerInvokers
                     if (chatAction.HasValue)
                     {
                         var chatId = update.Message?.Chat.Id! ?? update.CallbackQuery?.Message?.Chat.Id! ?? -1;
-                        await botClient.SendChatActionAsync(chatId, chatAction.Value);
+                        await botClient.SendChatAction(chatId: chatId, action: chatAction.Value);
                     }
 
                     await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
