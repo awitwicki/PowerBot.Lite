@@ -1,6 +1,5 @@
 ﻿using PowerBot.Lite.Attributes.AttributeValidators;
 using PowerBot.Lite.Handlers;
-using PowerBot.Lite.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,7 +14,8 @@ namespace PowerBot.Lite.HandlerInvokers
         public static async Task InvokeUpdate(
             ITelegramBotClient botClient,
             Update update,
-            IEnumerable<FastMethodInfo> handlerMethods)
+            IEnumerable<FastMethodInfo> handlerMethods,
+            ILifetimeScope scope)
         {
             foreach (var fastMethodInfo in handlerMethods)
             {
@@ -29,18 +29,15 @@ namespace PowerBot.Lite.HandlerInvokers
                         await botClient.SendChatAction(chatId: chatId, action: chatAction.Value);
                     }
 
-                    await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
-                    {
-                        // Cast handler object
-                        var handler = scope.ResolveNamed(serviceName: fastMethodInfo.GetHandlerType().Name,
-                            fastMethodInfo.GetHandlerType());
+                    // Cast handler object
+                    var handler = scope.ResolveNamed(serviceName: fastMethodInfo.GetHandlerType().Name,
+                        fastMethodInfo.GetHandlerType());
 
-                        // Set params
-                        ((BaseHandler)handler).Init(botClient, update);
+                    // Set params
+                    ((BaseHandler)handler).Init(botClient, update);
 
-                        // Invoke method
-                        fastMethodInfo.Invoke(handler);
-                    }
+                    // Invoke method
+                    fastMethodInfo.Invoke(handler);
                 }
                 catch (Exception ex)
                 {

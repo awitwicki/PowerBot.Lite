@@ -112,12 +112,14 @@ namespace PowerBot.Lite
                 var filteredFastMethods = FastMethodInfoUpdateMatcher
                     .FilterFastMethods(update, HandlerDescriptors);
 
-                // Handle message delegate
-                var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods);
+                await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+                {
+                    // Handle message delegate
+                    var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods, scope);
 
-                // Invoke middleware with message processing delegate
-                // Not await. Do not wait until Invoke will be finished
-                _ = MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc);
+                    // Invoke middleware with message processing delegate
+                    await MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc, scope);
+                }
             }
             catch (Exception exception)
             {

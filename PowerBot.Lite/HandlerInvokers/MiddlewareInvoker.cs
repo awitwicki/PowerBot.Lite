@@ -12,37 +12,34 @@ namespace PowerBot.Lite.HandlerInvokers
 {
     public static class MiddlewareInvoker
     {
-        public static async Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods)
+        public static async Task InvokeUpdate(ITelegramBotClient botClient, Update update, Func<Task> processMethods, ILifetimeScope scope)
         {
             try
             {
-                await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+                var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>()
+                    .ToArray();
+
+                // Without middlewares
+                if (!middlewares.Any())
                 {
-                    var middlewares = scope.Resolve<IEnumerable<IBaseMiddleware>>()
-                        .ToArray();
-
-                    // Without middlewares
-                    if (!middlewares.Any())
-                    {
-                        await processMethods();
-                        return;
-                    }
-
-                    // Recursively create middlewares action execute tree
-                    var firstMiddleware = middlewares.First();
-
-                    // Push middlewares to tree
-                    foreach (var middleware in middlewares.Skip(1))
-                    {
-                        firstMiddleware.PushNextMiddleware(middleware);
-                    }
-
-                    // Push final middleware to properly process processMethods delegate
-                    firstMiddleware.PushNextMiddleware(new FinalBaseMiddleware());
-
-                    // Run first middleware
-                    await firstMiddleware.Invoke(botClient, update, processMethods);
+                    await processMethods();
+                    return;
                 }
+
+                // Recursively create middlewares action execute tree
+                var firstMiddleware = middlewares.First();
+
+                // Push middlewares to tree
+                foreach (var middleware in middlewares.Skip(1))
+                {
+                    firstMiddleware.PushNextMiddleware(middleware);
+                }
+
+                // Push final middleware to properly process processMethods delegate
+                firstMiddleware.PushNextMiddleware(new FinalBaseMiddleware());
+
+                // Run first middleware
+                await firstMiddleware.Invoke(botClient, update, processMethods);
             }
             catch (Exception ex)
             {

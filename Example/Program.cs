@@ -19,6 +19,10 @@ var botClient = new CoreBot(botToken)
         x.RegisterType<RandomService>()
             .As<IRandomService>()
             .SingleInstance();
+        
+        x.RegisterType<ScopeTestService>()
+            .As<IScopeTestService>()
+            .InstancePerLifetimeScope();
     })
     .RegisterMiddleware<BotMiddleware>()
     .RegisterMiddleware<BotSecondMiddleware>()
