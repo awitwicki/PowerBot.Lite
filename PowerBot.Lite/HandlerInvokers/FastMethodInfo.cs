@@ -1,40 +1,42 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace PowerBot.Lite.HandlerInvokers
 {
     internal class FastMethodInfo
     {
-        private delegate void TaskDelegate(object instance);
-        private TaskDelegate Delegate { get; }
-        private MethodInfo MethodInfo { get; set; }
+        private readonly Func<object, Task> _taskInvoker;
+
+        private readonly MethodInfo MethodInfo;
         public MethodInfo GetMethodInfo() => MethodInfo;
-        private Type HandlerType { get; set; }
+
+        private readonly Type HandlerType;
         public Type GetHandlerType() => HandlerType;
+
         public FastMethodInfo(MethodInfo methodInfo, Type handlerType)
         {
             HandlerType = handlerType;
             MethodInfo = methodInfo;
+
             var instanceExpression = Expression.Parameter(typeof(object), "instance");
+            var instanceCast = !methodInfo.IsStatic
+                ? Expression.Convert(instanceExpression, methodInfo.ReflectedType!)
+                : null;
 
-            var callExpression = Expression.Call(
-                !methodInfo.IsStatic ? Expression.Convert(instanceExpression, methodInfo.ReflectedType!) : null,
-                methodInfo);
+            var callExpression = Expression.Call(instanceCast, methodInfo);
 
-            var taskDelegate = Expression
-                .Lambda<TaskDelegate>(callExpression, instanceExpression)
-                .Compile();
-
-            Delegate = (instance) =>
-            {
-                taskDelegate(instance);
-            };
+                // Upcast Task<T> to Task so we can await uniformly.
+                var asTaskExpression = Expression.Convert(callExpression, typeof(Task));
+                _taskInvoker = Expression
+                    .Lambda<Func<object, Task>>(asTaskExpression, instanceExpression)
+                    .Compile();
         }
 
-        public void Invoke(object instance)
+        public Task InvokeAsync(object instance)
         {
-            Delegate(instance);
+            return _taskInvoker(instance);
         }
     }
 }

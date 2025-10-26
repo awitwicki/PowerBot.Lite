@@ -37,7 +37,7 @@ namespace PowerBot.Lite.HandlerInvokers
                     ((BaseHandler)handler).Init(botClient, update);
 
                     // Invoke method
-                    fastMethodInfo.Invoke(handler);
+                    await fastMethodInfo.InvokeAsync(handler);
                 }
                 catch (Exception ex)
                 {

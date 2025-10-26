@@ -106,25 +106,29 @@ namespace PowerBot.Lite
 
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            try
+            // Dispatch processing to a background task so updates are not serialized by long awaits.
+            _ = Task.Run(async () =>
             {
-                // Get all methods to run to list
-                var filteredFastMethods = FastMethodInfoUpdateMatcher
-                    .FilterFastMethods(update, HandlerDescriptors);
-
-                await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+                try
                 {
-                    // Handle message delegate
-                    var processMethodsFunc = async () => await MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods, scope);
+                    // Get all methods to run to list
+                    var filteredFastMethods = FastMethodInfoUpdateMatcher
+                        .FilterFastMethods(update, HandlerDescriptors);
 
-                    // Invoke middleware with message processing delegate
-                    await MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc, scope);
+                    await using (var scope = DIContainerInstance.Container.BeginLifetimeScope())
+                    {
+                        // Handle message delegate
+                        var processMethodsFunc = () => MessageInvoker.InvokeUpdate(botClient, update, filteredFastMethods, scope);
+
+                        // Invoke middleware with message processing delegate
+                        await MiddlewareInvoker.InvokeUpdate(botClient, update, processMethodsFunc, scope);
+                    }
                 }
-            }
-            catch (Exception exception)
-            {
-                await HandleErrorAsync(botClient, exception, cancellationToken);
-            }
+                catch (Exception exception)
+                {
+                    await HandleErrorAsync(botClient, exception, cancellationToken);
+                }
+            }, cancellationToken);
         }
 
         Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
