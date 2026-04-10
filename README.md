@@ -99,6 +99,71 @@ Filter for any messages by defined type (Text, Photo, Audio, Video, Voice, ...)
 ### `[UpdateTypeFilter(UpdateType updateType)]`
 Filter for any updates by defined type (Message, InlineQuery, ChosenInlineResult, CallbackQuery, EditedMessage, ...)
 
+## Custom Handler Filters
+
+You can create custom filters to control whether a handler method should be executed. This is useful for implementing authorization checks, rate limiting, feature flags, or any other custom logic.
+
+### 1. Create a filter class
+
+Extend the `BaseHandlerFilter` class. It provides the same convenience properties as `BaseHandler` (`User`, `ChatId`, `Message`, `Chat`, etc.):
+
+```csharp
+public class AdminOnlyFilter : BaseHandlerFilter
+{
+    private static readonly HashSet<long> AdminIds = new() { 123456789 };
+
+    protected override Task<bool> FilterAsync()
+    {
+        return Task.FromResult(AdminIds.Contains(User.Id));
+    }
+}
+```
+
+The `FilterAsync` method returns `true` to allow the handler to execute, or `false` to skip it.
+
+Available properties inside the filter: `Update`, `User`, `Message`, `CallbackQuery`, `MessageId`, `Chat`, `ChatId`.
+
+Alternatively, you can implement the `IHandlerFilter` interface directly if you only need the raw `Update`:
+
+```csharp
+public class RawFilter : IHandlerFilter
+{
+    public Task<bool> FilterAsync(Update update)
+    {
+        return Task.FromResult(update.Message?.Text != null);
+    }
+}
+```
+
+### 2. Apply the filter to a handler method
+
+Use the `[HandlerFilter<T>]` attribute:
+
+```csharp
+[HandlerFilter<AdminOnlyFilter>]
+[MessageHandler("/admin")]
+public async Task AdminCommand()
+{
+    await BotClient.SendMessage(chatId: ChatId, text: "Admin panel");
+}
+```
+
+### 3. Multiple filters
+
+You can stack multiple filters on a single method. All filters must pass (AND logic) for the handler to execute:
+
+```csharp
+[HandlerFilter<AdminOnlyFilter>]
+[HandlerFilter<RateLimitFilter>]
+[MessageHandler("/secret")]
+public async Task SecretCommand()
+{
+    await BotClient.SendMessage(chatId: ChatId, text: "Secret content");
+}
+```
+
+Filters are **auto-registered** in the DI container — no manual registration needed. They are resolved per lifetime scope, so you can inject dependencies into your filter classes via constructor injection.
+
 ## Middleware
 
 Also You can define your own middlewares by creating class that inherits `BaseMiddleware` and register it in CoreBot builder it by next template:

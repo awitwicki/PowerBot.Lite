@@ -7,7 +7,7 @@ using PowerBot.Lite;
 Console.WriteLine("Hello, World!");
 Console.WriteLine("Starting PowerBot.Lite");
 
-var botToken = "";
+var botToken = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN")!;
 
 if (botToken == null)
 {

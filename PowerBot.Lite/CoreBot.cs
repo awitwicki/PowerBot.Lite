@@ -1,11 +1,13 @@
 ﻿using Autofac;
 using Autofac.Features.AttributeFilters;
+using PowerBot.Lite.Attributes.AttributeValidators;
 using PowerBot.Lite.HandlerInvokers;
 using PowerBot.Lite.Handlers;
 using PowerBot.Lite.Middlewares;
 using PowerBot.Lite.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PowerBot.Lite.Exceptions;
@@ -70,6 +72,19 @@ namespace PowerBot.Lite
 
             // Build handler descriptors
             HandlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
+
+            // Auto-register handler filters
+            var filterTypes = HandlerDescriptors
+                .SelectMany(hd => hd.GetMethodInfos())
+                .SelectMany(fmi => AttributeValidators.GetHandlerFilterTypes(fmi.GetMethodInfo()))
+                .Distinct();
+
+            foreach (var filterType in filterTypes)
+            {
+                ContainerBuilder.RegisterType(filterType)
+                    .AsSelf()
+                    .InstancePerLifetimeScope();
+            }
 
             // Register handlers
             foreach (var handlerMethodType in HandlerDescriptors)

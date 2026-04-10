@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -106,6 +107,17 @@ namespace PowerBot.Lite.Attributes.AttributeValidators
             }
 
             return true;
+        }
+
+        // Get handler filter types from method attributes
+        public static IEnumerable<Type> GetHandlerFilterTypes(MethodInfo methodInfo)
+        {
+            var attributes = methodInfo.GetCustomAttributes(true);
+
+            return attributes
+                .Where(a => a.GetType().IsGenericType &&
+                             a.GetType().GetGenericTypeDefinition() == typeof(HandlerFilterAttribute<>))
+                .Select(a => a.GetType().GetGenericArguments()[0]);
         }
     }
 }

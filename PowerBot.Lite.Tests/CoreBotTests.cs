@@ -65,8 +65,22 @@ public class CoreBotTests
     {
         // Arrange
         var coreBot = new CoreBot(Token);
-           
+
         // Act and Assert
         Assert.Throws<NotDefinedAnyHandlersOrMiddlewaresException>(() => coreBot.Build());
+    }
+
+    [Fact]
+    public void CoreBot_WithFilterHandler_BuildsSuccessfully()
+    {
+        // Arrange
+        var coreBot = new CoreBot(Token)
+            .RegisterHandler<TestFilterHandler>();
+
+        // Act
+        coreBot.Build();
+
+        // Assert
+        Assert.True(true);
     }
 }
