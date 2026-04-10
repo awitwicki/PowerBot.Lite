@@ -1,5 +1,4 @@
 ﻿using PowerBot.Lite.Attributes;
-using PowerBot.Lite.Attributes.AttributeValidators;
 using PowerBot.Lite.Handlers;
 using System;
 using System.Collections.Generic;
@@ -23,10 +22,9 @@ namespace PowerBot.Lite.HandlerInvokers
                 try
                 {
                     // Check handler filters - all must pass (AND logic)
-                    var filterTypes = AttributeValidators.GetHandlerFilterTypes(fastMethodInfo.GetMethodInfo());
                     var filtersPass = true;
 
-                    foreach (var filterType in filterTypes)
+                    foreach (var filterType in fastMethodInfo.HandlerFilterTypes)
                     {
                         var filter = (IHandlerFilter)scope.Resolve(filterType);
                         if (!await filter.FilterAsync(update))
@@ -41,8 +39,8 @@ namespace PowerBot.Lite.HandlerInvokers
                         continue;
                     }
 
-                    // Get and send chatAction from attributes
-                    var chatAction = AttributeValidators.GetChatActionAttributes(fastMethodInfo.GetMethodInfo());
+                    // Get and send chatAction from cached attributes
+                    var chatAction = fastMethodInfo.ChatAction;
                     if (chatAction.HasValue)
                     {
                         var chatId = update.Message?.Chat.Id! ?? update.CallbackQuery?.Message?.Chat.Id! ?? -1;

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using PowerBot.Lite.Attributes;
-using PowerBot.Lite.Attributes.AttributeValidators;
+using System.Text.RegularExpressions;
 using PowerBot.Lite.Handlers;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -21,12 +20,8 @@ internal static class FastMethodInfoUpdateMatcher
 
     private static FastMethodInfo _matchHandlerMethodWithCallbackQueries(FastMethodInfo fastMethodInfo, Update update)
     {
-        // Matching for message text regex have the most priority than the others
-        if (fastMethodInfo.GetMethodInfo().GetCustomAttributes(true)
-                .Any(y => y.GetType() == typeof(CallbackQueryHandlerAttribute)) &&
-            // Pattern matching for CallbackQuery data
-            AttributeValidators.MatchCallbackQueryHandlerMethod(fastMethodInfo.GetMethodInfo(),
-                update.CallbackQuery!.Data))
+        if (fastMethodInfo.CallbackQueryHandlerPattern != null &&
+            Regex.Match(update.CallbackQuery!.Data, fastMethodInfo.CallbackQueryHandlerPattern, RegexOptions.IgnoreCase).Success)
         {
             return fastMethodInfo;
         }
@@ -37,20 +32,17 @@ internal static class FastMethodInfoUpdateMatcher
     private static FastMethodInfo _matchHandlerMethodWithMessages(FastMethodInfo fastMethodInfo, Update update)
     {
         // Matching for message text regex have the most priority than the others
-        if (update?.Message?.Text != null && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true)
-                .Any(y => y.GetType() == typeof(MessageHandlerAttribute)) &&
-            // Pattern matching for message text
-            AttributeValidators.MatchMessageHandlerMethod(fastMethodInfo.GetMethodInfo(), update.Message.Text))
+        if (update?.Message?.Text != null &&
+            fastMethodInfo.MessageHandlerPattern != null &&
+            Regex.Match(update.Message.Text, fastMethodInfo.MessageHandlerPattern, RegexOptions.IgnoreCase).Success)
         {
             return fastMethodInfo;
         }
 
         // Message type
-        // If method have universal update type attribute filter then check it
-        if (update?.Type == UpdateType.Message && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true)
-                .Any(y => y.GetType() == typeof(MessageTypeFilterAttribute)) &&
-            // Pattern matching for message text
-            AttributeValidators.MatchMessageType(fastMethodInfo.GetMethodInfo(), update))
+        if (update?.Type == UpdateType.Message &&
+            fastMethodInfo.MessageTypeFilter.HasValue &&
+            fastMethodInfo.MessageTypeFilter.Value == update.Message.Type)
         {
             return fastMethodInfo;
         }
@@ -72,11 +64,9 @@ internal static class FastMethodInfoUpdateMatcher
             };
 
             // Check for update type
-            if (matchedMethod == null && fastMethodInfo.GetMethodInfo().GetCustomAttributes(true)
-                    .Any(y => y.GetType() == typeof(UpdateTypeFilterAttribute)))
+            if (matchedMethod == null && fastMethodInfo.UpdateTypeFilter.HasValue)
             {
-                // Pattern matching for message text
-                if (!AttributeValidators.MatchUpdateType(fastMethodInfo.GetMethodInfo(), update))
+                if (fastMethodInfo.UpdateTypeFilter.Value != update.Type)
                 {
                     continue;
                 }

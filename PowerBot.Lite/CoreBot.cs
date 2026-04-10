@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Features.AttributeFilters;
-using PowerBot.Lite.Attributes.AttributeValidators;
 using PowerBot.Lite.HandlerInvokers;
 using PowerBot.Lite.Handlers;
 using PowerBot.Lite.Middlewares;
@@ -73,10 +72,10 @@ namespace PowerBot.Lite
             // Build handler descriptors
             HandlerDescriptors = HandlerBuilder.BuildHandlerDescriptors(DefinedHandlers);
 
-            // Auto-register handler filters
+            // Auto-register handler filters (using cached attribute data from FastMethodInfo)
             var filterTypes = HandlerDescriptors
                 .SelectMany(hd => hd.GetMethodInfos())
-                .SelectMany(fmi => AttributeValidators.GetHandlerFilterTypes(fmi.GetMethodInfo()))
+                .SelectMany(fmi => fmi.HandlerFilterTypes)
                 .Distinct();
 
             foreach (var filterType in filterTypes)
