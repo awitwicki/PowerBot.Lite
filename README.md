@@ -20,7 +20,7 @@ If you're interested or would like to contribute, please check out the code and 
 Welcome to the community and the development of this project.
 
 ## Main info
-* Library is based on Telegram.Bot 19.0.0 and Telegram.Bot.Extensions.Polling with Version 1.0.2 which is referred to official Telegram Bot API version 7.0
+* Library is based on Telegram.Bot 22.9.6
 * There is simple [Example](Example) project.
 * Telegram [channel](https://t.me/powerbot_wrapper) with community.
 
